@@ -1,0 +1,36 @@
+{
+  "expo": {
+    "name": "QuibleDrive",
+    "slug": "QuibleDrive",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/appIcon.png",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./assets/splash-icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#E0F7FA"
+    },
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#ffffff"
+      },
+      "package": "com.ukonulucky.QuibleDrive"
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    },
+    "plugins": [
+      [
+        "@stripe/stripe-react-native", {
+          "publishableKey":"pk_test_51LbXR4DR4fQFeyUfF7B87TnTMVfapU0trjcBgqmS9mAMJ3Itz92MAKU3lQKy4KROgnviJUIrnGKIW1mNZ2k90D6H00Qpthtixm"
+        }
+      ]
+    ],
+    "scheme": "com.QuibleDrive.wwww"
+  }
+}
