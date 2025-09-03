@@ -10,6 +10,7 @@ import ActivityScreen from 'src/ClientScreens/activityScreen';
 import WalletScreen from 'src/ClientScreens/walletScreen';
 import { Feather, FontAwesome, Fontisto, Ionicons } from '@expo/vector-icons';
 import ProfileScreen from 'src/ClientScreens/profileScreen';
+import AuthStackNavigation from './AuthStackNavigation';
 
 const Tab = createBottomTabNavigator<bottomTabNavigationParamList>();
 
@@ -119,23 +120,17 @@ useEffect(() => {
     >
       <Tab.Screen name="Home" 
       component={HomeScreen}
-
       options={{
-
         tabBarIcon: ({ focused }) => (
-          <Entypo name="home" size={24} color={ `${focused ? "#F27C22" : "#0C1A30"}`} /> 
-           
+          <Entypo name="home" size={24} color={ `${focused ? "#F27C22" : "#0C1A30"}`} />  
         ),
        tabBarActiveTintColor : "#F27C22",
        tabBarInactiveTintColor:"#0C1A30"
       }}
-      
       />
-     
       <Tab.Screen name="Group"
-        component={GroupScreen} 
+        component={<AuthStackNavigation />} 
         options={{
- 
          tabBarIcon : ({focused}) => (
           <Fontisto name="persons" size={24} color={ `${focused ? "#F27C22" : "#0C1A30"}`} />
          ),
@@ -143,9 +138,6 @@ useEffect(() => {
         tabBarInactiveTintColor:"#0C1A30"
        }}
        />
-    
-
-      
       { 
         jwtToken &&   <Tab.Screen
         name="Activity" 
@@ -162,8 +154,6 @@ useEffect(() => {
        
         />
       }
-
-    
       { 
         jwtToken && 
         <Tab.Screen name="Wallet" 
@@ -185,10 +175,8 @@ useEffect(() => {
         <Tab.Screen name="Profile" 
               component={ProfileScreen}
               options={{
-        
                 tabBarIcon: ({ focused }) => (
                   <FontAwesome name="user" size={24} color={ `${focused ? "#F27C22" : "#0C1A30"}`} />
-                 
                 ),
                tabBarActiveTintColor : "#F27C22",
                tabBarInactiveTintColor:"#0C1A30"

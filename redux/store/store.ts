@@ -1,14 +1,15 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { authReducer } from "../slices/authSlice";
 import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
-import { groupReducer } from "../slices/userSlice"
-
+import { memberReducer } from "../slices/memberSlice"
+import {  groupReducer } from "../slices/groupSlice"
 
 
 export const store = configureStore({
     reducer: {
         authReducer,
-        groupReducer
+        groupReducer,
+        memberReducer
     }
 })
 

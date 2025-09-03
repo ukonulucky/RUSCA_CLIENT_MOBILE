@@ -3,16 +3,10 @@ import { PayloadAction, createSlice } from "@reduxjs/toolkit"
 import { groupType, groupTypes } from "utils/types"
 
 
-
-
-
-
 const initialState: groupTypes = {
     groups : []
 }
    
-
-
 const groupDonationSlice = createSlice({
     name:"groupDonation",
     initialState,
@@ -22,6 +16,7 @@ const groupDonationSlice = createSlice({
         }
     }
 })
+
 
 
 

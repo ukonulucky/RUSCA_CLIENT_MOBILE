@@ -187,8 +187,17 @@ export const retreiveFromLocalStorage = async (key: string) => {
 
 
 
-interface PaymentData {
-  email: string;
-  amount: number;
-  paymentStatus: 'success' | 'failed' | 'pending';
-}
+export const formatMoney = (value: number, currency = 'USD') => {
+  try {
+    // @ts-ignore
+    if (typeof Intl !== 'undefined' && Intl.NumberFormat) {
+      return new Intl.NumberFormat(undefined, { style: 'currency', currency }).format(value);
+    }
+  } catch {}
+  return `${currency} ${value.toFixed(0)}`;
+};
+
+
+
+
+

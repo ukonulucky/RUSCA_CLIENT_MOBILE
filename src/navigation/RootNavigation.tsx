@@ -1,11 +1,7 @@
-import { View, Text, Platform } from 'react-native'
 import React, { useEffect, useRef, useState } from 'react'
-import * as Device from 'expo-device';
-import Constants from 'expo-constants';
-import * as Notifications from 'expo-notifications';
 import { useAppDispatch, useAppSelector } from '../../redux/store/store';
 import AuthStackNavigation from './AuthStackNavigation';
-import { NavigationContainer, useNavigation } from '@react-navigation/native';
+import { NavigationContainer } from '@react-navigation/native';
 
 
 import AppLoaderScreen from '../AppComponent/AppLoader';
@@ -13,21 +9,14 @@ import BottomTabNavigation from './BottomTabNavigation';
 import { GroupPicker } from 'src/ClientScreens/groupListScreen';
 import { toastError } from 'utils/useFulFunc';
 import { getAllGroupsApi } from 'apiServices/userApi/userApi';
-import { getGroupAction } from 'redux/slices/userSlice';
+import { getGroupAction } from 'redux/slices/groupSlice';
 import { AxiosError } from 'axios';
 
 
 
 
 
-Notifications.setNotificationHandler({
-    handleNotification: async () => ({
-      shouldShowAlert: true,
-      shouldPlaySound: true,
-      shouldSetBadge: true
-    }),
-  });
-  
+
 
 const RootNavigation = () => {
 
@@ -49,6 +38,7 @@ const [loader, setLoader] = useState(false)
     const data = useAppSelector(state => state.authReducer.userProfile.userData!)
     const [group, setGroup] = useState([])  
   
+    const memberList = useAppSelector(state => state.memberReducer.member)
     const handleGetGroups = async (x: { 
         userToken: string,
         userId: string
@@ -67,8 +57,8 @@ const [loader, setLoader] = useState(false)
                amount: i.monthlyContribution,
                maxMembers: i.numberOfMembers,
                currentMembers: i.groupMembersId.length,
-               currency:"£"
-               
+             currency: "£",
+             groupMembersId: i.groupMembersId
            }    
        })
      dispatch(getGroupAction(newData))
@@ -105,7 +95,6 @@ const [loader, setLoader] = useState(false)
        }
     }
   
- 
     
     useEffect(() => { 
         if (data) { 
@@ -114,24 +103,24 @@ const [loader, setLoader] = useState(false)
                 userToken: data.token
             })
         }
-    },[jwtToken])
+    },[jwtToken, memberList])
     
 
   return (
     <NavigationContainer ref={navigationRef}>
       
       
-      {/* { 
+      { 
         !isUserLoggedIn ? <AuthStackNavigation /> : <BottomTabNavigation /> 
-        } */}
+        }
      
       
-      { 
+     {/*  { 
         !isUserLoggedIn ? <AuthStackNavigation /> : <GroupPicker
         groups={group}
           isLoading={ loader }
         /> 
-        }
+        } */}
      
       </NavigationContainer>
   )

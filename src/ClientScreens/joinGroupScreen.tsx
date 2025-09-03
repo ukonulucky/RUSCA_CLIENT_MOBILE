@@ -1,14 +1,8 @@
 import { useNavigation } from '@react-navigation/native';
-import React from 'react';
 import { View, Text, TouchableOpacity, FlatList } from 'react-native';
 
 
-const groups = [
-  { id: '1', name: 'Business Growth', contribution: 160, description: 'A group for entrepreneurs to share tips and insights.' },
-  { id: '2', name: 'Tech Innovators', contribution: 150, description: 'A group for tech enthusiasts and innovators.' },
-  { id: '3', name: 'Health and Wellness', contribution: 459, description: 'Join to discuss healthy living, fitness, and wellness.' },
-  { id: '4', name: 'Creative Minds', contribution: 550, description: 'A group for creative professionals to network and collaborate.' },
-];
+
 
 export default function JoinGroupScreen() {
     const navigation = useNavigation()

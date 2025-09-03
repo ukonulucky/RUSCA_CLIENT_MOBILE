@@ -490,7 +490,8 @@ export type groupType ={
   amount: string,
   currency: string,
   maxNumber: string,
-  currentNumber: string
+  currentNumber: string,
+  groupMembersId: string[]
 }[] | []
 
 
@@ -498,11 +499,61 @@ export type groupTypes = {
   groups: groupType
 } 
 
+export type Group = {
+  id: string;
+  name: string;
+  amount: number; // contribution per cycle
+  currency?: string; // 'USD' | 'NGN' | 'GBP' | ...
+  maxMembers: number;
+  currentMembers?: number;
+  groupMembersId: string[]
+  
+};
 
 
+export type GroupPickerProps = {
+  groups?: Group[];
+  isSubscribed?: boolean;
+    onSelect?: (group: Group) => void;
+  isLoading: boolean
+};
 
 
+interface PaymentData {
+  email: string;
+  amount: number;
+  paymentStatus: 'success' | 'failed' | 'pending';
+}
 
 
+export type memberType = {
+  userId: string,
+  groupId: string,
+  status: boolean,
+  _id: string
+} | null
 
+export type memberStateType = {
+  member : memberType  
+}
+
+export type GroupDetails = {
+  id: string;
+  name: string;
+  amount: number; // contribution amount
+  dateOfContribution: string; // e.g., '2021-12-01'
+  members: Member[];
+};
+
+export type Member = {
+  id: string;
+  name: string;
+  email?: string;
+  status: 'active' | 'inactive';
+};
+
+export type GroupDetailsProps = {
+  group: GroupDetails;
+  onContribute: (groupId: string) => void; // handle contribution action
+};
 
