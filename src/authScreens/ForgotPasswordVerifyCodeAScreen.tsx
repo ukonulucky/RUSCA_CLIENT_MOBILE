@@ -13,191 +13,37 @@ import TextOTP from './components/TextOTP'
 
 
 import {
-  sendUserEmailForPasswordResetApi,
   verifyUserPasswordResetTokenApi
 } from '../../apiServices/authApi/authApi'
 import { authStackParamList, verifyForgetCodeRouteType } from '../../utils/types'
 import { AxiosError } from 'axios'
 import { toastError } from '../../utils/useFulFunc'
 import { OnBoardingButton } from '../AppComponent/OnboardingButton'
-import CountDownTimer from './components/CountDownTimer'
+
 
 
 const ForgetPasswordVarifyCodeScreen = ({
   navigation
 }: NativeStackScreenProps<authStackParamList>) => {
+  
   const [otp, setOtp] = useState('')
   const [showOtpError, setShowOtpError] = useState(false)
   const [otpClicked, setOtpClicked] = useState(false)
-  /* start call to the server to validate token obtained from mail */
-  const [startApiCall, setStartApiCall] = useState(false)
 
-  /* start call to the server to send mail to the user registered mail which contains the token */
-  const [startEmailVerificationApi, setStartEmailVerificationApi] =
-    useState(false)
+
 
   /* to show or hide the loader screen */
   const [loader, setLoader] = useState(false)
 
-  /* controll sending of new mail to users mail which contains their token */
-  const [resentMail, setResentMail] = useState(false)
-
-  /* a count down timer for controlling when to active a new mail sending */
-  const [resumeCounter, setResumeCounter] = useState(false)
-  const [counterKey, setCounterKey] = useState(1)
 
   /* obtain params */
 
   const { params: { userEmail : email } } = useRoute<verifyForgetCodeRouteType>()
 
-
-
- /* mutation to send five digit token for verification */
-
- const sendUserEmailForPasswordReset = useMutation({
-  mutationKey: ['sendUserEmailPasswordResetKey'],
-  mutationFn: sendUserEmailForPasswordResetApi
-})
-
-  const {
-    data: userResponse,
-    error,
-    isError,
-    isPending,
-    isSuccess
-  } =  sendUserEmailForPasswordReset
-
-  /* make a call to the server demanding for email sending to user for verification */
-
-  useEffect(() => {
-  
-    if (isError && startEmailVerificationApi) {
-      setLoader(false)
-      let errorMessage
-      if (error  instanceof AxiosError && error?.response) {
-        errorMessage = error?.response.data.message
-      } else {
-        errorMessage = error?.message
-      }
-
-      /*  const errorMessage = error?.response.date.message || error?.data */
-
-      const toastData = {
-        type: 'error',
-        message: errorMessage,
-        heading: 'Email Verification',
-        headingColor: 'red',
-        messageColor: 'red'
-      }
-      toastError(toastData)
-      setLoader(false)
-      setStartEmailVerificationApi(false)
-
-      return
-    }
-
-    if (isPending && startEmailVerificationApi) {
-      setLoader(true)
-    }
-
-    if (isSuccess && startEmailVerificationApi) {
-      setResumeCounter(false)
-      setCounterKey(counterKey + 1)
-      const toastData = {
-        type: 'success',
-        message: userResponse.message,
-        heading: 'Forgot Password Email',
-        headingColor: 'green',
-        messageColor: 'green'
-      }
-      toastError(toastData)
-      setLoader(false)
-      setStartEmailVerificationApi(false)
-    }
-  }, [isError, isPending, isSuccess, startEmailVerificationApi])
-
-  /* display of useMuation states for sending mail */
- 
-
-
-  /* make apicall to send email verification */
-  useEffect(() => {
-    ; (async () => {
-      try {
-        await sendUserEmailForPasswordReset.mutateAsync({
-          email
-        })
-      } catch (error) {
-        console.log(error)
-      }
-    })()
-  }, [resentMail])
-
- 
-
-
- /* start  useMutation to verify the users otp pin */
-
- const verifyUserPasswordResetTokenMutation = useMutation({
-  mutationKey: ['verifyUserPasswordResetToken'],
-  mutationFn: verifyUserPasswordResetTokenApi
-})
-
-
-
-  const {
-    data: tokenVerificationData,
-    error: tokenVerificationError,
-    isError: tokeVerificationIsError,
-    isPending: tokeVerificationIsPending,
-    isSuccess: tokenVerificationIsSuccess
-  } = verifyUserPasswordResetTokenMutation
-  
    
-  useEffect(() => {
-    if (tokeVerificationIsError && startApiCall) {
-      setLoader(false)
-      let errorMessage
-      if (tokenVerificationError instanceof AxiosError && tokenVerificationError?.response) {
-        errorMessage = tokenVerificationError?.response.data.message
-      } else {
-        errorMessage = tokenVerificationError?.message
-      }
 
   
-      toastError({
-        type: 'error',
-        message: errorMessage,
-        heading: 'Email Token Verification',
-        headingColor: 'red',
-        messageColor: 'red'
-      })
-      setLoader(false)
-      setStartApiCall(false)
-
-      return
-    }
-
-    if (tokeVerificationIsPending && startApiCall) {
-      setLoader(true)
-    }
-
-    if (tokenVerificationIsSuccess && startApiCall) {
-      setLoader(false)
-      setStartApiCall(false)
-      navigation.navigate('newPasswordScreen', {
-        email, token: "123456"
-      })
-    }
-  }, [
-    startApiCall,
-    tokeVerificationIsPending,
-    tokeVerificationIsError,
-    tokenVerificationIsSuccess
-  ])
-  
-  
-
+verifyUserPasswordResetTokenApi
   const handleSubmit = async () => {
     try {
       if (otp.length !== 5) {
@@ -208,14 +54,70 @@ const ForgetPasswordVarifyCodeScreen = ({
       setShowOtpError(false)
       setOtpClicked(true)
       setLoader(true)
-      setStartApiCall(!startApiCall)
-      await verifyUserPasswordResetTokenMutation.mutateAsync({
-        token: '123456',
-        email: email
+    
+     
+      /* make api call for user signIn */
+             const { message, error
+             } = await verifyUserPasswordResetTokenApi({
+               email,
+               token: otp
+             });
+             
+      
+             if (error ) { 
+              const toastData = {
+                type: 'warn',
+                message: message,
+                heading: 'Verify OTP',
+                headingColor: 'green',
+                messageColor: 'green'
+              }
+              toastError(toastData)
+               setLoader(!loader)
+               return
+             }
+        
+             const toastData = {
+                 type: 'success',
+                 message: message,
+                 heading: 'Verify Token',
+                 headingColor: 'green',
+                 messageColor: 'green'
+               }
+               toastError(toastData)
+      setLoader(!loader)
+      navigation.navigate("newPasswordScreen", {
+        email,
+        token: otp
       })
-    } catch (error: any) {
-      console.log(error.message)
-    }
+            
+    } catch (error) {
+           setLoader(!loader)
+           if ( error instanceof AxiosError && error.response) {
+             const  errorMessage = error?.response.data.message || error.message
+             const toastData = {
+               type: 'error',
+               message: errorMessage,
+               heading: 'Verify OTP',
+               headingColor: 'red',
+               messageColor: 'red'
+             }
+             toastError(toastData)
+           } else { 
+             console.log("error", error)
+             const toastData = {
+               type: 'error',
+               message: "Unknown Error",
+               heading: 'Verify OTP',
+               headingColor: 'red',
+               messageColor: 'red'
+             }
+             toastError(toastData)
+           }
+         } finally {
+           setLoader(false);
+         
+         }
   }
 
   /* useEffect to control the display  of otp error */
@@ -252,9 +154,7 @@ const ForgetPasswordVarifyCodeScreen = ({
 
         {/* forgot password section ends */}
 
-        {/* otp section starts */}
 
-        {/* otp  section ends */}
 
         <View className="mt-[32px]">
           <TextOTP otp={otp} setOtp={setOtp} />
@@ -280,30 +180,7 @@ const ForgetPasswordVarifyCodeScreen = ({
             }
           />
 
-          <View className="flex-row items-center justify-center mt-2">
-            <TouchableOpacity
-              onPress={() => {
-                if (resumeCounter) {
-                  setStartEmailVerificationApi(true)
-                  setResentMail(!resentMail)
-                }
-              }}
-            >
-              <Text
-                className={`text-zinc-600 text-xs font-normal font-['Aeonik-Regular'] leading-tight ${
-                  resumeCounter && 'text-blue-600'
-                }`}
-              >
-                {resumeCounter ? 'Click to resend code ' : 'Resend code in'}
-              </Text>
-            </TouchableOpacity>
-            <CountDownTimer
-              key={counterKey}
-              counterTime={30}
-              resumeCounter={resumeCounter}
-              setResumeCounter={setResumeCounter}
-            />
-          </View>
+      
         </View>
 
         {/* app button ends */}

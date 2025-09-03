@@ -64,6 +64,9 @@ export type signUpFormStateProp = {
     role?:string,
     phone:string
 }
+export type getAllGroupsType = {
+  jwtToken: string
+}
 
 export type phoneNumberValidPropTypes = {
   setFormattedValue: React.Dispatch<React.SetStateAction<string>>
@@ -451,11 +454,6 @@ export type apiLoginType = {
   password: string
 }
 
-export type countDownTimeType = {
-  setResumeCounter : React.Dispatch<React.SetStateAction<boolean>> ,
-  resumeCounter : boolean,
-  counterTime : number,
-}
 
 
 export type userSignInResponseType = {
@@ -468,33 +466,9 @@ export type userSignInResponseType = {
 }
 
 
-/* use route for productDetails screen */
-export type productDetailsScreenRouteType  = RouteProp<mainStackParamaList,"productDetailsScreen">
-
-
-/* Rider app types start */
-export type riderMainStackParamaList = {
-  HOME: undefined,
-  ACTIVITY: undefined,
-  ACCOUNT: undefined,
-  SERVICES: undefined
-}
-
-
-export type riderGlobalStackParamaList = {
-  riderChooseDirection: undefined,
-  riderBottomTabNavigation: undefined
-}
 
 
 
-
-export type appDatePickerPropType = {
-  heading: string,
-  handleDateChange: (data: string) => void,
-  date: string
-}
-/* Rider app types ends */
 
 
 /* auth section prop start */
@@ -509,65 +483,26 @@ export type updateUserDataApiProp = {
   }
 }
 
+// get all groups
+export type groupType ={
+  id: string,
+  name: string,
+  amount: string,
+  currency: string,
+  maxNumber: string,
+  currentNumber: string
+}[] | []
 
 
-export type driverIdCardType = {
-  frontView: string ,
-  backView: string,
-  expirationDate: string ,
-  driverLicenseNumber: string ,
-  anything: any[] 
-}
+export type groupTypes = {
+  groups: groupType
+} 
 
 
-export type  driverLicenseType = {
-    front_image: string,
-    back_image: string,
-    expiry_date: string,
-    id_number: string,
-    extras: {
-        anything:any
-    }
-}
-
-export type driveRegisterType = {
-  driverBio: {
-    fullname: string,
-    phone: string,
-    dob: string,
-    image: string,
-    isDriverProfileComplete: boolean,
-    email: string
-  },
-  vehicle: {
-      brand: string,
-      model:string,
-      color: string,
-      plate_number: string,
-      photos: string[],
-      prod_year: string,
-      cert_of_verification:string,
-    allocation: string,
-      isVehicleDetailsComplete: boolean
-  },
-  license: {
-      front_image: string,
-      back_image: string,
-      expiry_date: string,
-      id_number: string,
-      extras: {
-          anything:any
-      },
-      isLicenseDataComplete: boolean
-  },
-  vehicle_type: string
-}
 
 
-export type driverBioType = {
-  email: string,
-  fullname: string,
-  phone: string, 
-  image: string,
-  dob: string
-}
+
+
+
+
+

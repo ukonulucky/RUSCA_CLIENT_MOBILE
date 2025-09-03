@@ -3,13 +3,19 @@ import React, { useEffect, useRef, useState } from 'react'
 import * as Device from 'expo-device';
 import Constants from 'expo-constants';
 import * as Notifications from 'expo-notifications';
-import { useAppSelector } from '../../redux/store/store';
+import { useAppDispatch, useAppSelector } from '../../redux/store/store';
 import AuthStackNavigation from './AuthStackNavigation';
 import { NavigationContainer, useNavigation } from '@react-navigation/native';
-import { saveExpoPushTokenApi } from '../../apiServices/rideApi/rideApi';
+
 
 import AppLoaderScreen from '../AppComponent/AppLoader';
 import BottomTabNavigation from './BottomTabNavigation';
+import { GroupPicker } from 'src/ClientScreens/groupListScreen';
+import { toastError } from 'utils/useFulFunc';
+import { getAllGroupsApi } from 'apiServices/userApi/userApi';
+import { getGroupAction } from 'redux/slices/userSlice';
+import { AxiosError } from 'axios';
+
 
 
 
@@ -36,102 +42,95 @@ const RootNavigation = () => {
 
   const isUserLoggedIn = useAppSelector(state => state.authReducer.isLoggedIn)
 
+const [loader, setLoader] = useState(false)
 
-
-  /* get the rider verificatioon status */
-  const riderVerificationStatus =  useAppSelector(state => state.authReducer.riderVerificationStatus)
-    const [expoPushToken, setExpoPushToken] = useState<Notifications.ExpoPushToken | string>('');
-    const [notification, setNotification] = useState<Notifications.Notification | undefined>(
-      undefined
-    );
-    const notificationListener = useRef<Notifications.Subscription>();
-    const responseListener = useRef<Notifications.Subscription>();
+  const dispatch = useAppDispatch()
+ 
+    const data = useAppSelector(state => state.authReducer.userProfile.userData!)
+    const [group, setGroup] = useState([])  
   
-  useEffect(() => {
-      return
-    /* stop the operation if user is not logged in */
-    if (!isUserLoggedIn) return 
-
-      registerForPushNotificationsAsync().then(token => token && setExpoPushToken(token));
-  
-     
-      notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
-        setNotification(notification);
+    const handleGetGroups = async (x: { 
+        userToken: string,
+        userId: string
+    }) => { 
+   try {
+         setLoader(!loader);
+         /* make api call for user signIn */
+         const {data} = await getAllGroupsApi({
+             jwtToken: x.userToken,
+             userId: x.userId
+         });
+       const newData = data.map((i: any) => { 
+           return {
+               id: i._id,
+               name: i.groupName,
+               amount: i.monthlyContribution,
+               maxMembers: i.numberOfMembers,
+               currentMembers: i.groupMembersId.length,
+               currency:"£"
+               
+           }    
+       })
+     dispatch(getGroupAction(newData))
+     setGroup(newData)
+         console.log("group data", data)
+         setLoader(!loader)
+        
+       } catch (error) {
+         setLoader(!loader)
+         if ( error instanceof AxiosError && error.response) {
+           const  errorMessage = error?.response.data.message || error.message
+           const toastData = {
+             type: 'error',
+             message: errorMessage,
+             heading: 'Login',
+             headingColor: 'red',
+             messageColor: 'red'
+           }
+           toastError(toastData)
+         } else { 
+           console.log("error", error)
+           const toastData = {
+             type: 'error',
+             message: "Unknown Error",
+             heading: 'Login',
+             headingColor: 'red',
+             messageColor: 'red'
+           }
+           toastError(toastData)
+         }
+       } finally {
+         setLoader(false);
        
-        const { body, title } = notification.request.content
-        console.log("notification body", body, "notification title", title)
-    /*     navigationRef.current?.navigate("elcosmeScreen") */
-      });
-  
-      responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
-        console.log("notification response",response);
-      });
-  
-      return () => {
-        notificationListener.current &&
-          Notifications.removeNotificationSubscription(notificationListener.current);
-        responseListener.current &&
-          Notifications.removeNotificationSubscription(responseListener.current);
-      };
-    }, [isUserLoggedIn]);
-  
-  async function registerForPushNotificationsAsync() {
-
-      let token;
-    
-      if (Platform.OS === 'android') {
-        await Notifications.setNotificationChannelAsync('default', {
-          name: 'default',
-          importance: Notifications.AndroidImportance.MAX,
-          vibrationPattern: [0, 250, 250, 250],
-          lightColor: '#FF231F7C',
-        });
-      }
-    
-    if (Device.isDevice) {
-        const { status: existingStatus } = await Notifications.getPermissionsAsync();
-        let finalStatus = existingStatus;
-        if (existingStatus !== 'granted') {
-          const { status } = await Notifications.requestPermissionsAsync();
-          finalStatus = status;
-        }
-      if (finalStatus !== 'granted') {
-          alert('Failed to get push token for push notification!');
-          return;
-        }
-      
-      try {  
-        token = await Notifications.getExpoPushTokenAsync({
-           "projectId": "378c8b45-5af0-48c7-bdf2-6c5f887173ef"
-        })
-      
-      /*   console.log("this is the tokend", token, "jwt", jwtToken); */
-        if(!jwtToken) return
-            await saveExpoPushTokenApi({
-          expoPushToken: token,
-           jwtToken
-        })
-     
-       /*  console.log("response after saving token", response.message) */
-     
-        } catch (e) {
-        token = `${e}`;
-        console.log("error", e)
-        }
-      } else {
-        alert('Must use physical device for Push Notifications');
-      }
-    
-      return token;
+       }
     }
   
-
+ 
+    
+    useEffect(() => { 
+        if (data) { 
+            handleGetGroups({
+                userId: data._id,
+                userToken: data.token
+            })
+        }
+    },[jwtToken])
+    
 
   return (
     <NavigationContainer ref={navigationRef}>
       
-      { 
+      
+      {/* { 
         !isUserLoggedIn ? <AuthStackNavigation /> : <BottomTabNavigation /> 
+        } */}
+     
+      
+      { 
+        !isUserLoggedIn ? <AuthStackNavigation /> : <GroupPicker
+        groups={group}
+          isLoading={ loader }
+        /> 
         }
      
       </NavigationContainer>

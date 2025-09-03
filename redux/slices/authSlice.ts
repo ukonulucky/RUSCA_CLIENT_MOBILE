@@ -30,7 +30,7 @@ const authSlice = createSlice({
     reducers: {
         userLoggedInAndLoggedOutAction: (state, action: PayloadAction<userSignInResponseType | null>) => { 
             state.userProfile.userData = action.payload
-            state.isLoggedIn = action.payload ? true : false
+           
         },
     
         logInLogOutAction: (state, action: PayloadAction<boolean>) => { 

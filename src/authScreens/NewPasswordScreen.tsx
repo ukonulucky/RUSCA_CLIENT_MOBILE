@@ -8,7 +8,6 @@ import { newPasswordValidationSchema } from '../../utils/YubValidation'
 
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { authStackParamList, newPasswordRouteType } from '../../utils/types'
-import { useMutation } from '@tanstack/react-query'
 import { resetUserPasswordApi } from '../../apiServices/authApi/authApi'
 import { toastError } from '../../utils/useFulFunc'
 import { useRoute } from '@react-navigation/native'
@@ -24,7 +23,6 @@ const NewPasswordScreen = ({
 
   const [hidePassword2, sethidePassword2] = useState(false)
 
-  const [startApiCall, setStartApiCall] = useState(false)
 
   const [loader, setLoader] = useState(false)
 
@@ -42,73 +40,6 @@ const NewPasswordScreen = ({
     confirmNewPassword: ''
   })
 
-  /* mutation to send five digit token for verification */
-  
-   const resetUserPassword = useMutation({
-    mutationKey: ['resetUserPasswordApiKey'],
-    mutationFn: resetUserPasswordApi
-  })
-  
-  const {
-    data: userResponse,
-    error,
-    isError,
-    isPending,
-    isSuccess
-  } =  resetUserPassword
-
-  /* make apicall to server  */
-
-
-  
-  useEffect(() => {
-    if (isError && startApiCall) {
-      setLoader(false)
-      setStartApiCall(false)
-      let errorMessage
-      if ( error instanceof AxiosError && error?.response) {
-        errorMessage = error?.response.data.message
-      } else {
-        errorMessage = error?.message
-      }
-
-      toastError({
-        type: 'error',
-        message: errorMessage,
-        heading: 'Password Change',
-        headingColor: 'red',
-        messageColor: 'red'
-      })
-      setStartApiCall(false)
-      setLoader(false)
-
-      return
-    }
-
-    if (isPending && startApiCall) {
-      setLoader(true)
-    }
-
-    if (isSuccess && startApiCall) {
-      toastError({
-        type: 'success',
-        message: userResponse.message,
-        heading: 'Password Change',
-        headingColor: 'green',
-        messageColor: 'green'
-      })
-
-      setLoader(false)
-      setStartApiCall(false)
-      
-      navigation.navigate('passwordChangeSuccessScreen')
-    }
-  }, [isError, isPending, isSuccess, startApiCall])
-
-
-
-
-
   const {
     control,
     handleSubmit,
@@ -116,18 +47,69 @@ const NewPasswordScreen = ({
   } = useForm(formOptions)
 
   const onSubmit = async (data: { newPassword: string }) => {
-    try {
-      setStartApiCall(!startApiCall)
-        await resetUserPassword.mutateAsync({
+    console.log("body", data)
+      try {
+        setLoader(!loader);
+        /* make api call for user signIn */
+        const { message, error
+        } = await resetUserPasswordApi({
           email,
-          token,
-          password: data.newPassword
-        })
-    } catch (error: any) {
-      console.log(error.message)
-    }
-  }
-
+          password: data.newPassword,
+          token
+        });
+        
+ 
+        if (error ) { 
+         const toastData = {
+           type: 'warn',
+           message: message,
+           heading: 'Forgot Password',
+           headingColor: 'green',
+           messageColor: 'green'
+         }
+         toastError(toastData)
+          setLoader(!loader)
+          return
+        }
+   
+        const toastData = {
+            type: 'success',
+            message: message,
+            heading: 'Forgot Password',
+            headingColor: 'green',
+            messageColor: 'green'
+          }
+          toastError(toastData)
+        setLoader(!loader)
+        navigation.navigate("passwordChangeSuccessScreen")
+      } catch (error) {
+        setLoader(!loader)
+        if ( error instanceof AxiosError && error.response) {
+          const  errorMessage = error?.response.data.message || error.message
+          const toastData = {
+            type: 'error',
+            message: errorMessage,
+            heading: 'Login',
+            headingColor: 'red',
+            messageColor: 'red'
+          }
+          toastError(toastData)
+        } else { 
+          console.log("error", error)
+          const toastData = {
+            type: 'error',
+            message: "Unknown Error",
+            heading: 'Login',
+            headingColor: 'red',
+            messageColor: 'red'
+          }
+          toastError(toastData)
+        }
+      } finally {
+        setLoader(false);
+      
+      }
+    };
 
 
 

@@ -104,7 +104,7 @@ const ForgotPasswordScreen = ({
        }
      } finally {
        setLoader(false);
-       setStartApiCall(false);
+     
      }
    };
 

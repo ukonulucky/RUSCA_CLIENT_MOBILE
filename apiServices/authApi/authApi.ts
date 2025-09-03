@@ -65,7 +65,7 @@ export const verifyUserPasswordResetTokenApi = async (data: {
   email: string
   token: string
 }) => {
-  const response = await axios.post(`${baseUrl}/auth/verify-reset-token`, data)
+  const response = await axios.post(`${baseUrl}/auth/verifyChangePasswordToken`, data)
   return response.data
 }
 
@@ -75,7 +75,7 @@ export const resetUserPasswordApi = async (data: {
   token: string
   password: string
 }) => {
-  const response = await axios.post(`${baseUrl}/user/reset-password`, data)
+  const response = await axios.post(`${baseUrl}/auth/updatepassword`, data)
   return response.data
 }
 
