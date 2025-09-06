@@ -1,0 +1,129 @@
+import { useNavigation } from "@react-navigation/native";
+import { getAllGroupsApi } from "apiServices/userApi/userApi";
+import { AxiosError } from "axios";
+import React, { useEffect, useMemo, useState } from "react";
+import { SafeAreaView } from "react-native";
+import { useDispatch } from "react-redux";
+import { getGroupAction } from "redux/slices/groupSlice";
+import { useAppSelector } from "redux/store/store";
+import AppLoaderScreen from "src/AppComponent/AppLoader";
+import {
+  EmptyState,
+  GroupList,
+  GroupPickerHeader,
+  SearchBar,
+  SubscriptionBanner,
+} from "src/AppComponent/GroupPickerComp";
+import { Group, GroupPickerProps } from "utils/types";
+import { toastError } from "utils/useFulFunc";
+
+export function GroupPicker({
+  groups = [],
+  isSubscribed = true,
+  onSelect,
+  navigation
+}: GroupPickerProps) {
+
+
+  const [query, setQuery] = useState("");
+  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [loader, setLoader] = useState<boolean>(false);
+
+  const dispatch = useDispatch();
+  const filtered = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    if (!q) return groups;
+    return groups.filter((g) => g.name.toLowerCase().includes(q));
+  }, [groups, query]);
+
+  const handleSelect = (g: Group) => {
+    if (!isSubscribed) return;
+    setSelectedId(g.id);
+    onSelect?.(g);
+  };
+  const { token, _id } = useAppSelector(
+    (state) => state.authReducer.userProfile.userData!
+  );
+
+  const handleGetGroups = async (x: { userToken: string; userId: string }) => {
+    try {
+      setLoader(!loader);
+      /* make api call for user signIn */
+      const { data } = await getAllGroupsApi({
+        jwtToken: x.userToken,
+        userId: x.userId,
+      });
+
+      const newData = data.map((i: any) => {
+        return {
+          id: i._id,
+          name: i.groupName,
+          amount: i.monthlyContribution,
+          maxMembers: i.numberOfMembers,
+          currentMembers: i.groupMembersId.length,
+          currency: "£",
+          grouMemberId: i.groupMembersId,
+        };
+      });
+
+      dispatch(getGroupAction(newData));
+      console.log("group data", data);
+      setLoader(!loader);
+    } catch (error) {
+      setLoader(!loader);
+      if (error instanceof AxiosError && error.response) {
+        const errorMessage = error?.response.data.message || error.message;
+        const toastData = {
+          type: "error",
+          message: errorMessage,
+          heading: "Login",
+          headingColor: "red",
+          messageColor: "red",
+        };
+        toastError(toastData);
+      } else {
+        console.log("error", error);
+        const toastData = {
+          type: "error",
+          message: "Unknown Error",
+          heading: "Login",
+          headingColor: "red",
+          messageColor: "red",
+        };
+        toastError(toastData);
+      }
+    } finally {
+      setLoader(false);
+    }
+  };
+
+  useEffect(() => {
+    if (token && token) {
+      handleGetGroups({
+        userId: _id,
+        userToken: token,
+      });
+    }
+  }, []);
+
+  return (
+    <SafeAreaView className="flex-1 bg-sky-100">
+      {loader && <AppLoaderScreen />}
+      <GroupPickerHeader />
+      <SearchBar value={query} onChange={setQuery} />
+      <SubscriptionBanner isSubscribed={!!isSubscribed} />
+
+      {filtered.length === 0 ? (
+        <EmptyState />
+      ) : (
+        <GroupList
+          groups={filtered}
+          isSubscribed={!!isSubscribed}
+          selectedId={selectedId}
+            onSelect={handleSelect}
+            navigation
+        />
+      )}
+    </SafeAreaView>
+  );
+}

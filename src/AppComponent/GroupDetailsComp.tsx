@@ -1,7 +1,11 @@
 import React from 'react';
-import { Button, FlatList, Text, View } from 'react-native';
+import {  FlatList, Text, View } from 'react-native';
+import { Button } from "react-native-elements"
+
 import { GroupDetailsProps, Member } from 'utils/types';
 import { formatMoney } from 'utils/useFulFunc';
+import MakePayMent from './Payment';
+import { useAppSelector} from 'redux/store/store';
 
 
 // Member card component
@@ -14,4 +18,38 @@ export function MemberCard({ member }: { member: Member }) {
   );
 }
 
+export function GroupDetails({ group, email}: GroupDetailsProps) {
+  const { name, amount, dateOfContribution, members, id: groupId } = group;
+  console.log("group passed to details", group)
+  const userId = useAppSelector(state => state.authReducer.userProfile.userData?._id)
+    return (
+      <View className="flex-1 bg-sky-100 p-4">
+        <View className="bg-white rounded-2xl shadow-sm mb-6 p-4">
+          <Text className="text-2xl font-bold text-blue-900 mb-2">{name}</Text>
+          <Text className="text-blue-700 mb-4">Contribution amount: {formatMoney(amount)}</Text>
+          <Text className="text-blue-700 mb-4">Contribution Date: {new Date(dateOfContribution).toLocaleDateString()}</Text>
+  
+          <View>
+            <MakePayMent
+              amount={amount}
+              email={email}
+              name={name}
+              groupId={ groupId }
+              userId = {userId!}
+            />
+           </View>
+        </View>
+  
+        <Text className="text-xl text-blue-900 font-semibold mb-2">Members</Text>
+  
+        <FlatList
+          data={members}
+          keyExtractor={(item) => item.id}
+          renderItem={({ item }) => <MemberCard member={item} />}
+          contentContainerStyle={{ paddingBottom: 50 }}
+          showsVerticalScrollIndicator={false}
+        />
+      </View>
+    );
+  }
 

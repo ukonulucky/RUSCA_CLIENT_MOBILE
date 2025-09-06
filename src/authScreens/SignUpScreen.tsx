@@ -18,8 +18,7 @@ import PhoneNumberValidiation from "./components/PhoneNumberValidiation";
 import { authStackParamList, signUpFormStateProp } from "../../utils/types";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { CheckBox, Icon } from "react-native-elements";
-import { loginApi, registerApi } from "../../apiServices/authApi/authApi";
-import { useMutation } from "@tanstack/react-query";
+import {  registerApi } from "../../apiServices/authApi/authApi";
 import { toastError } from "../../utils/useFulFunc";
 import AppLoader from "../AppComponent/AppLoader";
 
@@ -30,9 +29,7 @@ const SignUpScreen = ({
   navigation,
 }: NativeStackScreenProps<authStackParamList>) => {
 
- 
-  /*  initiate redux dispatch */
-  const dispatch = useAppDispatch();
+
 
   /* set the display of the loader */
   const [loader, setLoader] = useState(false);
@@ -75,13 +72,11 @@ const SignUpScreen = ({
 
   /* section to login the user into the app just after registration */
   const onSubmit = async (data: signUpFormStateProp) => {
-    console.log("req data", data)
   
     try {
       setLoader(!loader);
       /* make api call for user signIn */
       const { message } = await registerApi(data);
-    
   
       // store user data to device storage
         const toastData = {
@@ -190,10 +185,10 @@ const SignUpScreen = ({
               </View>
             </View>
             <View>
-              {errors.fullname && (
+              {errors.fullName && (
                 <View className="mt-2 h-6">
                   <Text className='text-red-500 font-ligt font-["Aeonik-Regular"]'>
-                    {errors.fullname.message}
+                    {errors.fullName.message}
                   </Text>
                 </View>
               )}

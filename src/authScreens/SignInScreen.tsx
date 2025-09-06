@@ -1,4 +1,11 @@
-import { View, Text, Image, TextInput, TouchableOpacity, Alert } from "react-native";
+import {
+  View,
+  Text,
+  Image,
+  TextInput,
+  TouchableOpacity,
+  Alert,
+} from "react-native";
 import React, { useCallback, useState } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
@@ -14,9 +21,11 @@ import { loginApi } from "../../apiServices/authApi/authApi";
 import { toastError } from "../../utils/useFulFunc";
 
 import { AxiosError } from "axios";
-import { logInLogOutAction, userLoggedInAndLoggedOutAction } from "redux/slices/authSlice";
+import {
+  logInLogOutAction,
+  userLoggedInAndLoggedOutAction,
+} from "redux/slices/authSlice";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-
 
 const SignInScreen = ({
   navigation,
@@ -24,22 +33,6 @@ const SignInScreen = ({
   /* set the display of the loader */
   const [loader, setLoader] = useState(false);
 
-  /* set the token and email optained by the user after user logged in f the email is not verified*/
-  const [userToken, setUserToken] = useState("");
-  const [userEmail, setUserEmail] = useState("");
-
-  /* show dialog */
-
-  const [showDialog, setShowDialog] = useState(false);
-
-  /* start api call */
-
-  const [startApiCall, setStartApiCall] = useState(false);
-
-
-
-  
- 
   const [hidePassword, sethidePassword] = useState(false);
 
   const dispatch = useAppDispatch();
@@ -57,73 +50,70 @@ const SignInScreen = ({
     try {
       setLoader(!loader);
       /* make api call for user signIn */
-      const { message, token, user: {
-        _id,
-        email,
-        fullName,
-        role,
-        phone,
-        email_verified
-       }
+      const {
+        message,
+        token,
+        user: { _id, email, fullName, role, phone, email_verified },
       } = await loginApi(data);
-      if (!email_verified) { 
-        Alert.alert("Email Not Verified", "Please check your mail to verifiy.")
+      if (!email_verified) {
+        Alert.alert("Email Not Verified", "Please check your mail to verifiy.");
         const toastData = {
-          type: 'success',
+          type: "success",
           message: message,
-          heading: 'Login',
-          headingColor: 'green',
-          messageColor: 'green'
-        }
-        toastError(toastData)
-        setLoader(!loader)
-        return
+          heading: "Login",
+          headingColor: "green",
+          messageColor: "green",
+        };
+        toastError(toastData);
+        setLoader(!loader);
+        return;
       }
-      dispatch(userLoggedInAndLoggedOutAction({
-        _id,
-        email,
-        fullname: fullName,
-        phone,
-        role,
-        token
-      }))
-      dispatch(logInLogOutAction(true))
-     
+      dispatch(
+        userLoggedInAndLoggedOutAction({
+          _id,
+          email,
+          fullname: fullName,
+          phone,
+          role,
+          token,
+        })
+      );
+      dispatch(logInLogOutAction(true));
+
       const toastData = {
-          type: 'success',
-          message: message,
-          heading: 'Login',
-          headingColor: 'green',
-          messageColor: 'green'
-        }
-        toastError(toastData)
-      setLoader(!loader)
+        type: "success",
+        message: message,
+        heading: "Login",
+        headingColor: "green",
+        messageColor: "green",
+      };
+      toastError(toastData);
+      setLoader(!loader);
     } catch (error) {
-      setLoader(!loader)
-      if ( error instanceof AxiosError && error.response) {
-        const  errorMessage = error?.response.data.message || error.message
+      setLoader(!loader);
+      if (error instanceof AxiosError && error.response) {
+        const errorMessage = error?.response.data.message || error.message;
         const toastData = {
-          type: 'error',
+          type: "error",
           message: errorMessage,
-          heading: 'Login',
-          headingColor: 'red',
-          messageColor: 'red'
-        }
-        toastError(toastData)
-      } else { 
-        console.log("error", error)
+          heading: "Login",
+          headingColor: "red",
+          messageColor: "red",
+        };
+        toastError(toastData);
+      } else {
+        console.log("error", error);
         const toastData = {
-          type: 'error',
+          type: "error",
           message: "Unknown Error",
-          heading: 'Login',
-          headingColor: 'red',
-          messageColor: 'red'
-        }
-        toastError(toastData)
+          heading: "Login",
+          headingColor: "red",
+          messageColor: "red",
+        };
+        toastError(toastData);
       }
     } finally {
       setLoader(false);
-      setStartApiCall(false);
     }
   };
 
@@ -133,7 +123,6 @@ const SignInScreen = ({
       {loader && <AppLoader />}
       {/* loader section ends */}
       {/* dialog box to display when the user email is not verified and give the user option to verify his email */}
-      
 
       <View className="absolute top-[43px] left-[15px] bg-red-500 ">
         <Image

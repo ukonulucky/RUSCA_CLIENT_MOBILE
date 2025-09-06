@@ -4,7 +4,8 @@ import { groupType, groupTypes } from "utils/types"
 
 
 const initialState: groupTypes = {
-    groups : []
+    groups: [],
+    selectedGroupId: ""
 }
    
 const groupDonationSlice = createSlice({
@@ -12,9 +13,13 @@ const groupDonationSlice = createSlice({
     initialState,
     reducers: {
         getGroupAction: (state, action: PayloadAction<groupType>) => {
-         state.groups =  action.payload
-        }
+            state.groups = action.payload
+        },
+        setSelectedGroupIdAction: (state, action: PayloadAction<string>) => {
+            state.selectedGroupId = action.payload
     }
+    }
+       
 })
 
 
@@ -22,7 +27,7 @@ const groupDonationSlice = createSlice({
 
 
 
-export const {getGroupAction} =  groupDonationSlice.actions
+export const {getGroupAction, setSelectedGroupIdAction} =  groupDonationSlice.actions
 
 
 export const groupReducer = groupDonationSlice.reducer

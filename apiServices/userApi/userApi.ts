@@ -1,5 +1,4 @@
 import axios from 'axios'
-import { getAllGroupsType } from '../../utils/types'
 
 const baseUrl = 'http://10.0.2.2:9000/v1'
 
@@ -50,3 +49,37 @@ export const getGroupMembersApi = async (data: {
   })
   return res.data
 }
+export const getGroupApi = async (data: {
+  jwtToken: string,
+  userId: string,
+  groupId: string
+}) => {
+  const res = await axios.get(`${baseUrl}/contribution/group/${data.groupId}`, {
+    headers: {
+      Authorization: `Bearer ${data.jwtToken}`,
+      "userid":data.userId
+    }
+  })
+  return res.data
+}
+
+
+export const makePaymentApi = async (data: {
+  amount: string,
+    email: string,
+  name: string,
+  groupId: string,
+    userId: string
+}) => {
+  try {
+    const res = await axios.post(`http://10.0.2.2:9003/api/payment/paymentIntent`, data)
+  
+  console.log("response from server", res.data)
+  return res.data
+  } catch (error: any) {
+    console.log("error", error.response.data.message)
+  }
+  }
+
+
+
