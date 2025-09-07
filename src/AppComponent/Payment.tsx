@@ -2,17 +2,19 @@ import React, { useEffect, useState } from 'react';
 import { Alert, View } from 'react-native';
 import { Button } from "react-native-elements"
 import { useStripe } from '@stripe/stripe-react-native';
-import { makePaymentApi } from 'apiServices/userApi/userApi';
+import {
+  makePaymentApi
+ } from 'apiServices/userApi/userApi';
 import { paymentType } from 'utils/types';
+import { useAppSelector } from 'redux/store/store';
 
 
 
 const MakePayMent = ({ 
-  email, amount, name,userId, groupId
+  email, amount, name, groupId
 }:  paymentType) => {
   const { initPaymentSheet, presentPaymentSheet} = useStripe();
   const [loading, setLoading] = useState(false)
-
 
   // iniciate payment from the server
   
@@ -21,7 +23,9 @@ const MakePayMent = ({
     email: string,
     name: string
     userId: string,
-    groupId: string
+    groupId: string,
+    fullName: string,
+    jwtToken: string
   }): Promise<{
     paymentIntentSecret: string,
     ephemeralKeySecret: string,
@@ -31,11 +35,17 @@ console.log("data setnt", data)
   
   
     const res = await makePaymentApi({
-      ...data, amount: data.amount.toString()
+      ...data, amount: data.amount.toString(),
+      jwtToken: data.jwtToken
     })
     console.log("res sent",res)
     return res
   }
+   const { 
+      _id: userId,
+     fullname,
+      token
+    } = useAppSelector(state => state.authReducer.userProfile.userData!)
 
   const InitiatePaymentFromClient = async () => { 
     try {
@@ -45,7 +55,9 @@ console.log("data setnt", data)
     email,
     name,
     userId,
-    groupId
+    groupId,
+    fullName: fullname,
+    jwtToken: token
   })
 
     

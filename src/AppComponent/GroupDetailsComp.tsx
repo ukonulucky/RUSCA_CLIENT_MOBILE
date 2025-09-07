@@ -21,7 +21,7 @@ export function MemberCard({ member }: { member: Member }) {
 export function GroupDetails({ group, email}: GroupDetailsProps) {
   const { name, amount, dateOfContribution, members, id: groupId } = group;
   console.log("group passed to details", group)
-  const userId = useAppSelector(state => state.authReducer.userProfile.userData?._id)
+ 
     return (
       <View className="flex-1 bg-sky-100 p-4">
         <View className="bg-white rounded-2xl shadow-sm mb-6 p-4">
@@ -34,8 +34,7 @@ export function GroupDetails({ group, email}: GroupDetailsProps) {
               amount={amount}
               email={email}
               name={name}
-              groupId={ groupId }
-              userId = {userId!}
+              groupId={groupId}
             />
            </View>
         </View>

@@ -17,6 +17,7 @@ const RootNavigation = () => {
       { 
         !isUserLoggedIn ? <AuthStackNavigation /> : <BottomTabNavigation /> 
         }
+      
       </NavigationContainer>
   )
 }

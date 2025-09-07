@@ -1,12 +1,11 @@
 import Entypo from '@expo/vector-icons/Entypo';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { bottomTabNavigationParamList } from 'utils/types';
-import { Feather, FontAwesome, Fontisto, Ionicons } from '@expo/vector-icons';
+import {  Fontisto, Ionicons } from '@expo/vector-icons';
 import HomeScreen from 'src/ClientScreens/HomeScreen';
 import GroupStackNavigation from './GroupStackNavigation';
-import ActivityScreen from 'src/ClientScreens/ActivityScreen';
-import WalletScreen from 'src/ClientScreens/WalletScreen';
 import { useAppSelector } from 'redux/store/store';
+import PaymentHistory from 'src/ClientScreens/PaymentHistory';
 
 
 
@@ -64,25 +63,11 @@ function BottomTabNavigation() {
         tabBarInactiveTintColor:"#0C1A30"
        }}
        />
-      { 
-        jwtToken &&   <Tab.Screen
-        name="Activity" 
-        component={ActivityScreen}
-        options={{
- 
-          tabBarIcon: ({ focused, size }) => (
-            <Feather name="activity" size={24} color={ `${focused ? "#F27C22" : "#0C1A30"}`} />
- 
-         ),
-        tabBarActiveTintColor : "#F27C22",
-        tabBarInactiveTintColor:"#0C1A30"
-       }}
-        />
-      }
+
       { 
         jwtToken && 
-        <Tab.Screen name="Wallet" 
-              component={WalletScreen}
+        <Tab.Screen name="History" 
+              component={PaymentHistory}
               options={{
         
                 tabBarIcon: ({ focused }) => (

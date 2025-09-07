@@ -22,19 +22,10 @@ export default function HomeScreen() {
           <View className="w-full items-center">
             <TouchableOpacity
               className="bg-pink-700 py-4 px-10 rounded-full mb-4 w-3/4"
-              onPress={() => navigation.navigate('Activity')}
+              onPress={() => navigation.navigate('History')}
             >
               <Text className="text-white text-lg font-bold text-center">
                 EXPLORE ACTIVITY
-              </Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              className="bg-pink-700 py-4 px-10 rounded-full mb-4 w-3/4"
-              onPress={() => navigation.navigate('Wallet')}
-            >
-              <Text className="text-white text-lg font-bold text-center">
-                MANAGE WALLET
               </Text>
             </TouchableOpacity>
 

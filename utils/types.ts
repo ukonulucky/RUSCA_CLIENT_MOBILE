@@ -37,9 +37,7 @@ export type newProductCardPropType = {
 export type bottomTabNavigationParamList = {
   Home: { screen: "Home" };
   Group: undefined;
-  Activity: undefined;
-  Wallet: undefined;
-  Profile: undefined;
+  History: undefined;
 };
 
 export type authStackParamList = {
@@ -262,6 +260,16 @@ export type paymentType = {
   amount: number,
   email: string,
   name: string,
-  userId: string,
   groupId: string
+}
+
+export interface PaymentHistoryType {
+  _id: string;
+  amount: number; // in cents
+  currency: string;
+  description: string;
+  status: "created" | "succeeded" | "failed";
+  email: string;
+  paymentRecipt_url?: string;
+  createdAt: string;
 }

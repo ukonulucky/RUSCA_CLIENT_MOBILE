@@ -3,7 +3,6 @@ import React, { useEffect, useCallback, useState } from "react";
 
 import { loadFont } from "../../utils/fontDownload";
 import * as SplashScreen from "expo-splash-screen";
-import { NavigationContainer } from "@react-navigation/native";
 import RootNavigation from "./RootNavigation";
 
 // keep the spalsh screen visible while we fetch resources
