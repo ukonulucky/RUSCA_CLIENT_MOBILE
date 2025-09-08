@@ -20,9 +20,7 @@ export function MemberCard({ member }: { member: Member }) {
 }
 
 export function GroupDetails({ group, email}: GroupDetailsProps) {
-  const { name, amount, dateOfContribution, members, id: groupId } = group;
-  console.log("group passed to details", group)
- 
+  const { name, amount, dateOfContribution, members, id: groupId } = group 
 
  const navigation = useNavigation()
     return (

@@ -11,7 +11,8 @@ import { groupStackParamList } from 'utils/types'
 const GroupListScreen = ({
   navigation
 }: NativeStackScreenProps<groupStackParamList>) => {
-    /* get user jwtToken */
+  /* get user jwtToken */
+  
   
     const jwtToken = useAppSelector(state => state.authReducer.userProfile.userData?.token)
   
@@ -92,6 +93,7 @@ const GroupListScreen = ({
   return (
       <GroupPicker
       groups={group}
+      navigation={ navigation }
       />
    
   )

@@ -1,133 +1,138 @@
-import React, { useEffect, useState } from 'react';
-import { Alert, View } from 'react-native';
-import { Button } from "react-native-elements"
-import { useStripe } from '@stripe/stripe-react-native';
-import {
-  makePaymentApi
- } from 'apiServices/userApi/userApi';
-import { paymentType } from 'utils/types';
-import { useAppSelector } from 'redux/store/store';
+import React, { useEffect, useState } from "react";
+import { Alert, View } from "react-native";
+import { Button } from "react-native-elements";
+import { useStripe } from "@stripe/stripe-react-native";
 
+import { paymentType } from "utils/types";
+import { useAppSelector } from "redux/store/store";
 
+import { makePaymentApi } from "../../apiServices/paymentApi/paymentApi";
+import { AxiosError } from "axios";
+import { toastError } from "utils/useFulFunc";
 
-const MakePayMent = ({ 
-  email, amount, name, groupId
-}:  paymentType) => {
-  const { initPaymentSheet, presentPaymentSheet} = useStripe();
-  const [loading, setLoading] = useState(false)
+const MakePayMent = ({ email, amount, name, groupId }: paymentType) => {
+  const { initPaymentSheet, presentPaymentSheet } = useStripe();
+  const [loading, setLoading] = useState(false);
 
   // iniciate payment from the server
-  
-  const InitiatePaymentFromServer = async ( data: {
-    amount: number,
-    email: string,
-    name: string
-    userId: string,
-    groupId: string,
-    fullName: string,
-    jwtToken: string
+
+  const InitiatePaymentFromServer = async (data: {
+    amount: number;
+    email: string;
+    name: string;
+    userId: string;
+    groupId: string;
+    fullName: string;
+    jwtToken: string;
   }): Promise<{
-    paymentIntentSecret: string,
-    ephemeralKeySecret: string,
-    customerId: string
-  }> => { 
-console.log("data setnt", data)
-  
-  
+    paymentIntentSecret: string;
+    ephemeralKeySecret: string;
+    customerId: string;
+  }> => {
+    console.log("data setnt", data);
+
     const res = await makePaymentApi({
-      ...data, amount: data.amount.toString(),
-      jwtToken: data.jwtToken
-    })
-    console.log("res sent",res)
-    return res
-  }
-   const { 
-      _id: userId,
-     fullname,
-      token
-    } = useAppSelector(state => state.authReducer.userProfile.userData!)
+      ...data,
+      amount: data.amount.toString(),
+      jwtToken: data.jwtToken,
+    });
+    console.log("res sent", res);
+    return res;
+  };
 
-  const InitiatePaymentFromClient = async () => { 
+  const {
+    _id: userId,
+    fullname,
+    token,
+  } = useAppSelector((state) => state.authReducer.userProfile.userData!);
+
+  const InitiatePaymentFromClient = async () => {
     try {
-     
-  const result = await InitiatePaymentFromServer({
-    amount,
-    email,
-    name,
-    userId,
-    groupId,
-    fullName: fullname,
-    jwtToken: token
-  })
+      const result = await InitiatePaymentFromServer({
+        amount,
+        email,
+        name,
+        userId,
+        groupId,
+        fullName: fullname,
+        jwtToken: token,
+      });
 
-    
-  const { 
-    paymentIntentSecret,
-    ephemeralKeySecret,
-    customerId,
-  } = result!
- 
-  const {  error   } = await initPaymentSheet({
-    merchantDisplayName: "Rusca bank",
-    customerId: customerId,
-    paymentIntentClientSecret: paymentIntentSecret,
-    customerEphemeralKeySecret: ephemeralKeySecret,
-    allowsDelayedPaymentMethods: true,
-    
-  })
+      const { paymentIntentSecret, ephemeralKeySecret, customerId } = result!;
+
+      const { error } = await initPaymentSheet({
+        merchantDisplayName: "Rusca bank",
+        customerId: customerId,
+        paymentIntentClientSecret: paymentIntentSecret,
+        customerEphemeralKeySecret: ephemeralKeySecret,
+        allowsDelayedPaymentMethods: true,
+      });
       if (!error) {
-        
-    setLoading(true)
-    console.log("no error ")
-    
-  } 
+        setLoading(true);
+        console.log("no error ");
+      }
     } catch (error) {
-      console.log(error)
-  setLoading(!loading)
-  Alert.alert("Payment Error", "Error processing payment")
-}
-    
-  }
+       setLoading(!loading);
+                if (error instanceof AxiosError && error.response) {
+                  const errorMessage = error?.response.data.message || error.message;
+                  const toastData = {
+                    type: "error",
+                    message: errorMessage,
+                    heading: "Payment",
+                    headingColor: "red",
+                    messageColor: "red",
+                  };
+                  toastError(toastData);
+                } else {
+                  console.log("error", error);
+                  const toastData = {
+                    type: "error",
+                    message: "Unknown Error",
+                    heading: "Payment",
+                    headingColor: "red",
+                    messageColor: "red",
+                  };
+                  toastError(toastData);
+                }
+      Alert.alert("Payment Error", "Error processing payment");
+    }
+  };
 
-  
   // Initialize Stripe Payment Configuration
- 
+
   useEffect(() => {
-    InitiatePaymentFromClient()
-  }, [])
-
-
-
+    InitiatePaymentFromClient();
+  }, []);
 
   // Function to handle payment
   const handlePayment = async () => {
-    const { error, paymentOption} = await presentPaymentSheet();
+    const { error, paymentOption } = await presentPaymentSheet();
     if (error) {
-      console.error('Payment failed at present:', error);
-      Alert.alert("Payment Error", "Error processing payment")
+      console.error("Payment failed at present:", error);
+      Alert.alert("Payment Error", "Error processing payment");
     } else {
-      console.log('Payment successful!', paymentOption)
-      Alert.alert("Payment Status", "Payment successful")
+      console.log("Payment successful!", paymentOption);
+      Alert.alert("Payment Status", "Payment successful");
     }
   };
 
   return (
     <View>
-      <Button            
-    title="Make Contribution"
-    onPress={() => handlePayment()}
+      <Button
+        title="Make Contribution"
+        onPress={() => handlePayment()}
         buttonStyle={{
-                backgroundColor: '#3498db', 
-                borderRadius: 10, 
-                paddingVertical: 10, 
-                paddingHorizontal: 20
-              }}
-              titleStyle={{
-                color: 'white', 
-                fontSize: 18, 
-                fontWeight: 'bold'
-              }}
-  />
+          backgroundColor: "#3498db",
+          borderRadius: 10,
+          paddingVertical: 10,
+          paddingHorizontal: 20,
+        }}
+        titleStyle={{
+          color: "white",
+          fontSize: 18,
+          fontWeight: "bold",
+        }}
+      />
     </View>
   );
 };

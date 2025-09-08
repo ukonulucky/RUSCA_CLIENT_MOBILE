@@ -17,7 +17,8 @@ import { Group, GroupPickerProps } from "utils/types";
 import { toastError } from "utils/useFulFunc";
 
 export function GroupPicker({
-  groups = []
+  groups = [],
+  navigation
 }: GroupPickerProps) {
 
 
@@ -109,7 +110,8 @@ export function GroupPicker({
       {filtered?.length === 0 ? (
         <EmptyState />
       ) : (
-        <GroupList
+          <GroupList
+            navigation={ navigation}
           groups={filtered}
         />
       )}

@@ -1,9 +1,9 @@
-import { getPaymentHistoryApi } from "apiServices/userApi/userApi";
+import { getPaymentHistoryApi } from "apiServices/paymentApi/paymentApi";
 import { AxiosError } from "axios";
 import React, { useState, useEffect } from "react";
 import { View, Text, TextInput, FlatList, Button, TouchableOpacity, Alert, SafeAreaView } from "react-native";
 import { WebView } from "react-native-webview"; // Optional if you want to show the receipt in-app
-import { useAppDispatch, useAppSelector } from "redux/store/store";
+import { useAppSelector } from "redux/store/store";
 import AppLoaderScreen from "src/AppComponent/AppLoader";
 import { PaymentHistoryType } from "utils/types";
 import { toastError } from "utils/useFulFunc";
@@ -87,7 +87,7 @@ const PaymentHistory: React.FC = () => {
       userId: _id
     })
   }, [])
-  console.log("receipt", showReceipt)
+
   if (loader) { 
   return <AppLoaderScreen />
   }
@@ -95,7 +95,6 @@ const PaymentHistory: React.FC = () => {
     <SafeAreaView>
        <View className="p-6">
       <Text className="text-2xl font-bold mb-4">User Payment History</Text>
-
       {/* Search Bar */}
       <TextInput
         className="mb-4 p-3 border border-gray-300 rounded-md"

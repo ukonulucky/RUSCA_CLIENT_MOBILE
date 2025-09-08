@@ -65,7 +65,7 @@ export type authStackParamList = {
 };
 
 export type groupStackParamList = {
-  groupListScreen: { groupId: string };
+  groupListScreen: undefined;
   groupDetailsScreen: undefined;
   groupPaymentScreen: undefined;
 };
@@ -196,6 +196,7 @@ export type Group = {
 
 export type GroupPickerProps = {
   groups?: Group[];
+  navigation: any
 };
 export interface PaymentData {
   email: string;
@@ -218,7 +219,7 @@ export type GroupDetails = {
   id: string;
   name: string;
   amount: number; // contribution amount
-  dateOfContribution: string; // e.g., '2021-12-01'
+  dateOfContribution: number; // e.g., '2021-12-01'
   members: Member[];
 };
 

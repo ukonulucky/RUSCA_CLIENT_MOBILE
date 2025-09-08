@@ -20,7 +20,7 @@ const GroupDetailsScreen = () => {
 
   const { selectedGroupId} = useAppSelector(state => state.groupReducer)
 
-  const handleGroupAndItsMember = async (data: {
+  const handleGetGroupAndItsMember = async (data: {
     groupId: string,
     jwtToken: string,
     userId : string
@@ -94,7 +94,7 @@ const GroupDetailsScreen = () => {
   }
  
   useEffect(() => {
-    handleGroupAndItsMember(
+    handleGetGroupAndItsMember(
       {
         groupId: selectedGroupId,
         jwtToken: token,

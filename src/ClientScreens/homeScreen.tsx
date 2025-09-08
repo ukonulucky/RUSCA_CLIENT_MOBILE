@@ -3,9 +3,13 @@ import { View, Text, TouchableOpacity, ImageBackground } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient'; // This is to keep the gradient effect
 
 import { useNavigation } from '@react-navigation/native';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { bottomTabNavigationParamList } from 'utils/types';
 
-export default function HomeScreen() {
-    const navigation = useNavigation()
+export default function HomeScreen({
+  navigation
+}: NativeStackScreenProps<bottomTabNavigationParamList>) {
+ 
   return (
     <LinearGradient
       colors={['#FF7A00', '#D92B88']} // Gradient background from orange to magenta

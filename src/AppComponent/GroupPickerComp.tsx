@@ -1,4 +1,5 @@
 import { useNavigation } from "@react-navigation/native";
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
 
 import { addMemberToGroupApi } from "apiServices/userApi/userApi";
 import { AxiosError } from "axios";
@@ -14,7 +15,7 @@ import {
 import { setSelectedGroupIdAction } from "redux/slices/groupSlice";
 import { saveMemberAction } from "redux/slices/memberSlice";
 import { useAppDispatch, useAppSelector } from "redux/store/store";
-import { Group } from "utils/types";
+import { Group, groupStackParamList } from "utils/types";
 
 import { formatMoney, toastError } from "utils/useFulFunc";
 
@@ -76,9 +77,11 @@ export function ProgressBar({
 
 // Single group card
 export function GroupCard({
-  g
+  g,
+  navigation
 }: {
-  g: Group
+    g: Group,
+  navigation: any
 
 }) {
   const currency = g.currency || "USD";
@@ -164,7 +167,7 @@ export function GroupCard({
     }
   };
 
-  const navigation = useNavigation()
+ 
 
   return (
     <TouchableOpacity
@@ -250,15 +253,18 @@ export function GroupCard({
 
 // List/grid of group cards
 export function GroupList({
-  groups
+  groups,
+  navigation
 }: {
-  groups: Group[]
+    groups: Group[],
+  navigation: any
   }) {
   const { _id: userId } = useAppSelector(state => state.authReducer.userProfile.userData!)
   
   const renderItem = ({ item }: { item: Group }) => (
     <GroupCard
       g={item}
+      navigation={ navigation }
     />
   );
 
