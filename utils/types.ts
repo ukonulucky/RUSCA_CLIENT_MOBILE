@@ -38,6 +38,7 @@ export type bottomTabNavigationParamList = {
   Home: { screen: "Home" };
   Group: undefined;
   History: undefined;
+  Profile: undefined
 };
 
 export type authStackParamList = {
@@ -195,10 +196,6 @@ export type Group = {
 
 export type GroupPickerProps = {
   groups?: Group[];
-  isSubscribed?: boolean;
-  onSelect?: (group: Group) => void;
-  isLoading: boolean;
-  navigation: any;
 };
 export interface PaymentData {
   email: string;
@@ -236,10 +233,6 @@ export type GroupDetailsProps = {
   group: GroupDetails;
   email: string
 };
-
-
-
-
 
 export type groupMemberListType = {
   id: string,

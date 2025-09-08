@@ -1,11 +1,12 @@
 import Entypo from '@expo/vector-icons/Entypo';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { bottomTabNavigationParamList } from 'utils/types';
-import {  Fontisto, Ionicons } from '@expo/vector-icons';
+import {  Fontisto, Ionicons, MaterialCommunityIcons } from '@expo/vector-icons';
 import HomeScreen from 'src/ClientScreens/HomeScreen';
 import GroupStackNavigation from './GroupStackNavigation';
 import { useAppSelector } from 'redux/store/store';
 import PaymentHistory from 'src/ClientScreens/PaymentHistory';
+import UserProfileScreen from 'src/ClientScreens/UserProfileScreen';
 
 
 
@@ -72,6 +73,25 @@ function BottomTabNavigation() {
         
                 tabBarIcon: ({ focused }) => (
                   <Ionicons name="wallet" size={24} color={ `${focused ? "#F27C22" : "#0C1A30"}`} />
+                 
+                ),
+               tabBarActiveTintColor : "#F27C22",
+               tabBarInactiveTintColor:"#0C1A30"
+              }}
+              />
+      }
+      { 
+        jwtToken && 
+        <Tab.Screen name="Profile" 
+              component={UserProfileScreen}
+              options={{
+        
+                tabBarIcon: ({ focused }) => (
+
+                  <MaterialCommunityIcons name="logout" 
+                  size={24} color={ `${focused ? "#F27C22" : "#0C1A30"}`}
+                  />
+                 
                  
                 ),
                tabBarActiveTintColor : "#F27C22",

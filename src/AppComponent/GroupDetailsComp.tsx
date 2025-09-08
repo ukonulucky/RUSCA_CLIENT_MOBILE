@@ -1,11 +1,12 @@
 import React from 'react';
 import {  FlatList, Text, View } from 'react-native';
-import { Button } from "react-native-elements"
 
 import { GroupDetailsProps, Member } from 'utils/types';
 import { formatMoney } from 'utils/useFulFunc';
 import MakePayMent from './Payment';
 import { useAppSelector} from 'redux/store/store';
+import Header from 'src/authScreens/components/Header';
+import { useNavigation } from '@react-navigation/native';
 
 
 // Member card component
@@ -22,9 +23,15 @@ export function GroupDetails({ group, email}: GroupDetailsProps) {
   const { name, amount, dateOfContribution, members, id: groupId } = group;
   console.log("group passed to details", group)
  
+
+ const navigation = useNavigation()
     return (
-      <View className="flex-1 bg-sky-100 p-4">
-        <View className="bg-white rounded-2xl shadow-sm mb-6 p-4">
+      <View className="flex-1 bg-sky-100 p-4 ">
+        
+        <View className='mt-18'>
+        <Header navigation={navigation} />
+        </View>
+        <View className="bg-white rounded-2xl shadow-sm mb-6 p-4 mt-6">
           <Text className="text-2xl font-bold text-blue-900 mb-2">{name}</Text>
           <Text className="text-blue-700 mb-4">Contribution amount: {formatMoney(amount)}</Text>
           <Text className="text-blue-700 mb-4">Contribution Date: {new Date(dateOfContribution).toLocaleDateString()}</Text>

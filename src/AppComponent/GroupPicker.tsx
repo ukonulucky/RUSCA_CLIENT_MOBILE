@@ -1,7 +1,7 @@
-import { useNavigation } from "@react-navigation/native";
+
 import { getAllGroupsApi } from "apiServices/userApi/userApi";
 import { AxiosError } from "axios";
-import React, { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { SafeAreaView } from "react-native";
 import { useDispatch } from "react-redux";
 import { getGroupAction } from "redux/slices/groupSlice";
@@ -12,16 +12,12 @@ import {
   GroupList,
   GroupPickerHeader,
   SearchBar,
-  SubscriptionBanner,
 } from "src/AppComponent/GroupPickerComp";
 import { Group, GroupPickerProps } from "utils/types";
 import { toastError } from "utils/useFulFunc";
 
 export function GroupPicker({
-  groups = [],
-  isSubscribed = true,
-  onSelect,
-  navigation
+  groups = []
 }: GroupPickerProps) {
 
 
@@ -33,18 +29,17 @@ export function GroupPicker({
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
     if (!q) return groups;
-    return groups.filter((g) => g.name.toLowerCase().includes(q));
+    return groups?.filter((g) => g.name.toLowerCase().includes(q));
   }, [groups, query]);
 
-  const handleSelect = (g: Group) => {
-    if (!isSubscribed) return;
-    setSelectedId(g.id);
-    onSelect?.(g);
-  };
   const { token, _id } = useAppSelector(
     (state) => state.authReducer.userProfile.userData!
   );
 
+
+
+
+  // get all groups
   const handleGetGroups = async (x: { userToken: string; userId: string }) => {
     try {
       setLoader(!loader);
@@ -111,17 +106,11 @@ export function GroupPicker({
       {loader && <AppLoaderScreen />}
       <GroupPickerHeader />
       <SearchBar value={query} onChange={setQuery} />
-      <SubscriptionBanner isSubscribed={!!isSubscribed} />
-
-      {filtered.length === 0 ? (
+      {filtered?.length === 0 ? (
         <EmptyState />
       ) : (
         <GroupList
           groups={filtered}
-          isSubscribed={!!isSubscribed}
-          selectedId={selectedId}
-            onSelect={handleSelect}
-            navigation
         />
       )}
     </SafeAreaView>

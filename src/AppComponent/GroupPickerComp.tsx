@@ -14,7 +14,7 @@ import {
 import { setSelectedGroupIdAction } from "redux/slices/groupSlice";
 import { saveMemberAction } from "redux/slices/memberSlice";
 import { useAppDispatch, useAppSelector } from "redux/store/store";
-import { Group, groupStackParamList } from "utils/types";
+import { Group } from "utils/types";
 
 import { formatMoney, toastError } from "utils/useFulFunc";
 
@@ -54,21 +54,7 @@ export function SearchBar({
 }
 
 // Subscription status banner
-export function SubscriptionBanner({
-  isSubscribed,
-}: {
-  isSubscribed: boolean;
-}) {
-  if (isSubscribed) return null;
-  return (
-    <View className="mx-4 mt-3 rounded-xl border border-sky-200 bg-sky-50 px-4 py-3">
-      <Text className="text-blue-800">
-        You are not subscribed.{" "}
-        <Text className="font-semibold">Subscribe to choose a group.</Text>
-      </Text>
-    </View>
-  );
-}
+
 
 // Progress bar used inside cards
 export function ProgressBar({
@@ -90,19 +76,14 @@ export function ProgressBar({
 
 // Single group card
 export function GroupCard({
-  g,
-  isSubscribed,
-  selected,
-  onPress
+  g
 }: {
-  g: Group;
-  isSubscribed: boolean;
-  selected: boolean;
-    onPress: () => void;
+  g: Group
 
 }) {
   const currency = g.currency || "USD";
   const full = (g.currentMembers ?? 0) >= g.maxMembers;
+  const [selected, setSelected] = useState(false)
   const occupancy = Math.min(
     100,
     Math.round(((g.currentMembers ?? 0) / g.maxMembers) * 100)
@@ -121,9 +102,8 @@ export function GroupCard({
   // check if user is subscribed i.e the Id of user is found among the groupList
 
  
-  const isUseMember = g.groupMembersId?.includes(userId);
+  const isUserMember = g.groupMembersId?.includes(userId);
 
-  const message = isUseMember ? "Member" : "Choose";
 
   const handleAddToGroupFunc = async (data: {
     jwtToken: string;
@@ -189,9 +169,20 @@ export function GroupCard({
   return (
     <TouchableOpacity
       onPress={() => {
-       
+        setSelected(true)
+        if (!isUserMember) { 
+          const toastData = {
+               type: "info",
+               message: "User not a member",
+               heading: "Membership",
+               headingColor: "green",
+               messageColor: "green",
+             };
+             toastError(toastData);
+          return 
+        }
         dispatch(setSelectedGroupIdAction(g.id))
-        /*  navigation.navigate("") */
+      
         navigation.navigate("groupDetailsScreen")
       }}
       className="m-2 flex-1 rounded-2xl border border-sky-200 bg-white shadow"
@@ -232,17 +223,10 @@ export function GroupCard({
               userId: userId,
             });
           }}
-          disabled={!isSubscribed || full}
-          accessibilityLabel={
-            !isSubscribed
-              ? "Subscribe to choose a group"
-              : full
-              ? "Group is full"
-              : "Choose group"
-          }
+          disabled={isUserMember || full}  // disable if your a member or group is full
           className={`mt-2 w-full rounded-xl px-4 py-3 items-center justify-center
              ${
-               !isSubscribed || full
+               !isUserMember || full
                  ? "bg-blue-200"
                  : selected
                  ? "bg-blue-800"
@@ -251,16 +235,12 @@ export function GroupCard({
         >
           <Text
             className={`font-medium ${
-              !isSubscribed || full ? "text-blue-600" : "text-white"
+              !isUserMember || full ? "text-blue-600" : "text-white"
             }`}
           >
-            {!isSubscribed
-              ? "Subscribe to choose"
-              : full
-              ? "Full"
-              : selected
-              ? "Selected"
-              : message}
+            {
+              full ? "Group full" : isUserMember ? "Member": "Choose group"
+            }
           </Text>
         </Pressable>
       </View>
@@ -270,26 +250,15 @@ export function GroupCard({
 
 // List/grid of group cards
 export function GroupList({
-  groups,
-  isSubscribed,
-  selectedId,
-  onSelect,
-  navigation
-  
+  groups
 }: {
-  groups: Group[];
-  isSubscribed: boolean;
-  selectedId: string | null;
-    onSelect: (g: Group) => void;
-  navigation: any
-}) {
+  groups: Group[]
+  }) {
+  const { _id: userId } = useAppSelector(state => state.authReducer.userProfile.userData!)
+  
   const renderItem = ({ item }: { item: Group }) => (
     <GroupCard
       g={item}
-      isSubscribed={isSubscribed}
-      selected={selectedId === item.id}
-      onPress={() => onSelect(item)}
-     
     />
   );
 

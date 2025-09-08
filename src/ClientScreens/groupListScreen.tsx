@@ -91,9 +91,7 @@ const GroupListScreen = ({
   
   return (
       <GroupPicker
-        isLoading={loader}
       groups={group}
-      navigation
       />
    
   )
