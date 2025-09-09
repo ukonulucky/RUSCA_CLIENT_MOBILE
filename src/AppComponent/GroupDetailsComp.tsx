@@ -19,10 +19,10 @@ export function MemberCard({ member }: { member: Member }) {
   );
 }
 
-export function GroupDetails({ group, email}: GroupDetailsProps) {
+export function GroupDetails({ group, email, navigation}: GroupDetailsProps) {
   const { name, amount, dateOfContribution, members, id: groupId } = group 
 
- const navigation = useNavigation()
+
     return (
       <View className="flex-1 bg-sky-100 p-4 ">
         
@@ -40,6 +40,7 @@ export function GroupDetails({ group, email}: GroupDetailsProps) {
               email={email}
               name={name}
               groupId={groupId}
+              navigation={navigation}
             />
            </View>
         </View>

@@ -2,6 +2,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import {  groupStackParamList } from "../../utils/types";
 import GroupListScreen from "src/ClientScreens/GroupListScreen";
 import GroupDetailsScreen from "src/ClientScreens/GroupDetailsScreen";
+import PaymentSuccessScreen from "src/ClientScreens/PaymentSuccessScreen";
 
 
 const GroupStackNavigation = () => {
@@ -17,6 +18,11 @@ const GroupStackNavigation = () => {
       <Stack.Screen
         name="groupDetailsScreen"
         component={GroupDetailsScreen}
+      />
+     
+      <Stack.Screen
+        name="paymentSuccessScreen"
+        component={PaymentSuccessScreen}
       />
     
      

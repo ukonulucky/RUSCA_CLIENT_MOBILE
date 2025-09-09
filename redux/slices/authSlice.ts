@@ -32,7 +32,7 @@ const authSlice = createSlice({
             state.userProfile.userData = action.payload
            
         },
-    
+      
         logInLogOutAction: (state, action: PayloadAction<boolean>) => { 
             state.isLoggedIn = action.payload
         }

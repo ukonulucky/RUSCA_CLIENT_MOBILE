@@ -17,6 +17,10 @@ const groupDonationSlice = createSlice({
         },
         setSelectedGroupIdAction: (state, action: PayloadAction<string>) => {
             state.selectedGroupId = action.payload
+    },
+        clearGroupStateAction: (state) => {
+            state.selectedGroupId = ""
+            state.groups = []
     }
     }
        
@@ -27,7 +31,7 @@ const groupDonationSlice = createSlice({
 
 
 
-export const {getGroupAction, setSelectedGroupIdAction} =  groupDonationSlice.actions
+export const {getGroupAction, setSelectedGroupIdAction, clearGroupStateAction} =  groupDonationSlice.actions
 
 
 export const groupReducer = groupDonationSlice.reducer

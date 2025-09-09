@@ -10,7 +10,7 @@ const RootNavigation = () => {
   const navigationRef = useRef(null);
   /* check if user is logged in */
 
-  const isUserLoggedIn = useAppSelector(state => state.authReducer.isLoggedIn)
+  const isUserLoggedIn = useAppSelector(state => state.authReducer.userProfile.userData?.token)
     
   return (
     <NavigationContainer ref={navigationRef}>

@@ -20,8 +20,8 @@ const Tab = createBottomTabNavigator<bottomTabNavigationParamList>();
 function BottomTabNavigation() {
 
 
-  const jwtToken = 1
-  const jwtToken1 = useAppSelector(
+  
+  const jwtToken = useAppSelector(
     (state) => state.authReducer.userProfile.userData?.token
   )
 

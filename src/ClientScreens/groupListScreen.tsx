@@ -31,7 +31,7 @@ const GroupListScreen = ({
       }) => { 
      try {
            setLoader(!loader);
-           /* make api call for user signIn */
+           /* make api call to get all groups */
            const {data} = await getAllGroupsApi({
                jwtToken: x.userToken,
                userId: x.userId

@@ -46,7 +46,6 @@ export const sendVerificationEmailApi = async (token: string) => {
 }
 
 /* send user email for password reset */
-
 export const sendUserEmailForPasswordResetApi = async (data: {
   email: string
 }) => {
@@ -55,8 +54,6 @@ export const sendUserEmailForPasswordResetApi = async (data: {
   return response.data
  
 }
-
-/* verify user password reset token sent to user email */
 
 /* 
 verifyUserPasswordResetTokenApi
@@ -83,9 +80,9 @@ export const resetUserPasswordApi = async (data: {
 
 export const logOutUserApi = async (token: string) => {
 
-  const response = await axios.get(`${baseUrl}/user/logout`, {
+  const response = await axios.get(`${baseUrl}/auth/logout`, {
     headers: {
-      Authorization: `Token ${token}`
+      Authorization: `Bearer ${token}`
     }
   })
   return response.data

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { Alert, View } from "react-native";
 import { Button } from "react-native-elements";
 import { useStripe } from "@stripe/stripe-react-native";
@@ -9,11 +9,13 @@ import { useAppSelector } from "redux/store/store";
 import { makePaymentApi } from "../../apiServices/paymentApi/paymentApi";
 import { AxiosError } from "axios";
 import { toastError } from "utils/useFulFunc";
+import { useFocusEffect } from "@react-navigation/native";
 
-const MakePayMent = ({ email, amount, name, groupId }: paymentType) => {
+const MakePayMent = ({ email, amount, name, groupId, navigation }: paymentType) => {
   const { initPaymentSheet, presentPaymentSheet } = useStripe();
   const [loading, setLoading] = useState(false);
-
+  const [startApiCall, setStartApiCAll] = useState(true);
+  
   // iniciate payment from the server
 
   const InitiatePaymentFromServer = async (data: {
@@ -29,7 +31,6 @@ const MakePayMent = ({ email, amount, name, groupId }: paymentType) => {
     ephemeralKeySecret: string;
     customerId: string;
   }> => {
-    console.log("data setnt", data);
 
     const res = await makePaymentApi({
       ...data,
@@ -100,9 +101,14 @@ const MakePayMent = ({ email, amount, name, groupId }: paymentType) => {
 
   // Initialize Stripe Payment Configuration
 
-  useEffect(() => {
-    InitiatePaymentFromClient();
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      // This will run each time the screen is focused
+      console.log('Screen is focused');
+      InitiatePaymentFromClient()
+
+    }, []))
+ 
 
   // Function to handle payment
   const handlePayment = async () => {
@@ -110,9 +116,11 @@ const MakePayMent = ({ email, amount, name, groupId }: paymentType) => {
     if (error) {
       console.error("Payment failed at present:", error);
       Alert.alert("Payment Error", "Error processing payment");
+      setStartApiCAll(!startApiCall)
+     
     } else {
       console.log("Payment successful!", paymentOption);
-      Alert.alert("Payment Status", "Payment successful");
+      navigation.navigate("paymentSuccessScreen")
     }
   };
 

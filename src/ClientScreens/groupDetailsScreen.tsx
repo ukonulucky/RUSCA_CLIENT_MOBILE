@@ -5,11 +5,12 @@ import { getGroupApi, getGroupMembersApi } from 'apiServices/userApi/userApi'
 import { toastError } from 'utils/useFulFunc'
 import { AxiosError } from 'axios'
 import AppLoaderScreen from 'src/AppComponent/AppLoader'
-import { groupMemberListType } from 'utils/types'
+import { groupMemberListType, groupStackParamList } from 'utils/types'
+import { NativeStackScreenProps } from '@react-navigation/native-stack'
 
 
 
-const GroupDetailsScreen = () => {
+const GroupDetailsScreen = ({ navigation }:NativeStackScreenProps<groupStackParamList>) => {
 
   const [loader, setLoader] = useState(false)
   const [groupMembersList, setGroupMembersList] = useState<groupMemberListType | null>(null)
@@ -128,7 +129,8 @@ const GroupDetailsScreen = () => {
   return (
       <GroupDetails
       group={groupMembersList}
-      email={ email}
+      email={email}
+      navigation={navigation}
       />
   )
 }

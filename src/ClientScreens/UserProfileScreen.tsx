@@ -1,8 +1,12 @@
-import React from 'react';
-import { View, Text, Button, StyleSheet, TouchableOpacity } from 'react-native';
-
-import { useNavigation } from '@react-navigation/native';
+import React, { useState } from 'react';
+import { View, Text, TouchableOpacity } from 'react-native';
 import { useAppDispatch, useAppSelector } from 'redux/store/store';
+import { logOutUserApi } from 'apiServices/authApi/authApi';
+import { toastError } from 'utils/useFulFunc';
+import { AxiosError } from 'axios';
+import { logInLogOutAction, userLoggedInAndLoggedOutAction } from 'redux/slices/authSlice';
+import { saveMemberAction } from 'redux/slices/memberSlice';
+import { clearGroupStateAction } from 'redux/slices/groupSlice';
 
 const UserProfileScreen = () => {
   
@@ -14,11 +18,62 @@ const UserProfileScreen = () => {
     token
    } = useAppSelector((state) => state.authReducer.userProfile.userData!);
   const dispatch = useAppDispatch();
-  const navigation = useNavigation();
 
-  const handleLogout = () => {
-    ; // This will clear the user profile and token
-   // navigation.navigate('Login'); // Navigate back to the login screen
+  const [loader, setLoader] = useState(false)
+
+ 
+  // logOutUserApi
+  const handleLogout =  async () => {
+ try {
+       setLoader(!loader);
+       /* make api call for user signIn */
+       const { message, error
+       } = await logOutUserApi(token);
+       
+       logInLogOutAction
+   dispatch(userLoggedInAndLoggedOutAction(null))
+   dispatch(logInLogOutAction(false))
+   dispatch(saveMemberAction(null))
+   dispatch(saveMemberAction(null))
+    dispatch(clearGroupStateAction())
+  
+       const toastData = {
+           type: 'success',
+           message: message,
+           heading: 'Logout Password',
+           headingColor: 'green',
+           messageColor: 'green'
+         }
+         toastError(toastData)
+       setLoader(!loader)
+      
+     } catch (error) {
+       setLoader(!loader)
+       if ( error instanceof AxiosError && error.response) {
+         const  errorMessage = error?.response.data.message || error.message
+         const toastData = {
+           type: 'error',
+           message: errorMessage,
+           heading: 'Logout',
+           headingColor: 'red',
+           messageColor: 'red'
+         }
+         toastError(toastData)
+       } else { 
+         console.log("error", error)
+         const toastData = {
+           type: 'error',
+           message: "Unknown Error",
+           heading: 'Logout',
+           headingColor: 'red',
+           messageColor: 'red'
+         }
+         toastError(toastData)
+       }
+     } finally {
+       setLoader(false);
+     
+     }
   };
 
   if (!token) {

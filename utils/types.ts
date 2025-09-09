@@ -68,6 +68,7 @@ export type groupStackParamList = {
   groupListScreen: undefined;
   groupDetailsScreen: undefined;
   groupPaymentScreen: undefined;
+  paymentSuccessScreen: undefined
 };
 
 export type clientStackParamList = {
@@ -232,7 +233,8 @@ export type Member = {
 
 export type GroupDetailsProps = {
   group: GroupDetails;
-  email: string
+  email: string,
+  navigation: any
 };
 
 export type groupMemberListType = {
@@ -254,7 +256,8 @@ export type paymentType = {
   amount: number,
   email: string,
   name: string,
-  groupId: string
+  groupId: string,
+  navigation: any
 }
 
 export interface PaymentHistoryType {

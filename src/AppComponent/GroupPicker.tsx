@@ -23,7 +23,7 @@ export function GroupPicker({
 
 
   const [query, setQuery] = useState("");
-  const [selectedId, setSelectedId] = useState<string | null>(null);
+ 
   const [loader, setLoader] = useState<boolean>(false);
 
   const dispatch = useDispatch();
@@ -94,7 +94,7 @@ export function GroupPicker({
   };
 
   useEffect(() => {
-    if (token && token) {
+    if (token ) {
       handleGetGroups({
         userId: _id,
         userToken: token,
