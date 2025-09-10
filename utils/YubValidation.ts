@@ -6,6 +6,12 @@ export const validationSchemaSignIn = Yup.object().shape({
 })
 
 
+export const validationSchemaCreateGroup = Yup.object().shape({
+    groupName: Yup.string().required("Group name is required"),
+    numberOfMembers: Yup.string().required("Number of members is required"),
+    monthlyContribution: Yup.string().required("Monthly contribution is required")
+  
+})
 export const validationSchemaSignUp = Yup.object().shape({
     fullName: Yup.string().required("Full name is required"),
     email: Yup.string().email().required("Email is required"),

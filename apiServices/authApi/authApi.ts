@@ -1,11 +1,33 @@
 import axios from 'axios'
-import { apiLoginType,  signUpFormStateProp } from '../../utils/types'
+import { apiLoginType,  createGroupApiProp,   signUpFormStateProp } from '../../utils/types'
 
 const baseUrl = 'http://10.0.2.2:9000/v1'
 
 /* register api */
 export const registerApi = async (data: signUpFormStateProp) => {
   const res = await axios.post(`${baseUrl}/auth/register`, data)
+  return res.data
+}
+/* register api */
+export const createGroupApi = async ({ 
+  groupName,
+  jwtToken,
+  monthlyContribution,
+  numberOfMembers,
+  userId
+}: createGroupApiProp) => {
+  
+  const res = await axios.post(`${baseUrl}/contribution/group/create`, {
+    groupName,
+    numberOfMembers,
+    monthlyContribution
+  }, {
+    headers: {
+      Authorization: `Bearer ${jwtToken}`,
+      "userid":userId
+    }
+  })
+  console.log("response", res)
   return res.data
 }
 
@@ -34,7 +56,6 @@ export const verifyEmailApi = async (data: {
 }
 
 /* send verification email to user  api */
-
 export const sendVerificationEmailApi = async (token: string) => {
   console.log("this is the token received", token)
   const response = await axios.get(`${baseUrl}/user/send-verification-email`, {
@@ -90,7 +111,7 @@ export const logOutUserApi = async (token: string) => {
 
 
 /* update user profile  */
-
+// v1/
 export const upLoadUserProfilePicApi = async (data: {
   formData: HTMLFormElement,
   token: string
@@ -105,4 +126,50 @@ export const upLoadUserProfilePicApi = async (data: {
   console.log("this is the uplaod response", response.data)
   return response.data
 }
-  
+export const getAllMembersDetailsApi = async (data: {
+  userId: string,
+  jwtToken: string
+}) => { 
+  const response = await axios.get(`${baseUrl}/contribution/member/members/all/details`, {
+    headers: {
+      Authorization: `Bearer ${data.jwtToken}`,
+      'userId': data.userId,
+    },
+
+  })
+  return response.data
+}
+
+// delete member by Id
+
+export const deletMemberByIdApi = async (data: {
+  userId: string,
+  jwtToken: string,
+  id: string
+}) => { 
+  const response = await axios.delete(`${baseUrl}/contribution/member/${data.id}`, {
+    headers: {
+      Authorization: `Bearer ${data.jwtToken}`,
+      'userId': data.userId,
+    },
+    
+  })
+  return response.data
+}
+
+export const activateMemberByIdApi = async (data: {
+  userId: string,
+  jwtToken: string,
+  id: string
+}) => { 
+  const response = await axios.get(`${baseUrl}/contribution/member/activate/${data.id}`, {
+    headers: {
+      Authorization: `Bearer ${data.jwtToken}`,
+      'userId': data.userId,
+    },
+    
+  })
+  return response.data
+}
+
+// delete member

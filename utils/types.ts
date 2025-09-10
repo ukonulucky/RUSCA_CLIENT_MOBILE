@@ -9,6 +9,21 @@ export type signUpFormStateProp = {
   role?: string;
   phone: string;
 };
+
+export type createGroupFormStateProp = {
+  groupName: string;
+  numberOfMembers: string;
+  monthlyContribution: string;
+};
+export type createGroupApiProp = {
+  groupName: string;
+  numberOfMembers: string;
+  monthlyContribution: string;
+  jwtToken: string;
+  userId: string
+};
+
+
 export type getAllGroupsType = {
   jwtToken: string;
 };
@@ -38,8 +53,10 @@ export type bottomTabNavigationParamList = {
   Home: { screen: "Home" };
   Group: undefined;
   History: undefined;
-  Profile: undefined
+  Profile: undefined,
+  Members: undefined
 };
+
 
 export type authStackParamList = {
   signInScreen: undefined;

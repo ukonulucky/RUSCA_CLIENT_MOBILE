@@ -1,15 +1,16 @@
-import React from 'react';
+
 import { View, Text, TouchableOpacity, ImageBackground } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient'; // This is to keep the gradient effect
 
-import { useNavigation } from '@react-navigation/native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { bottomTabNavigationParamList } from 'utils/types';
+import { useAppSelector } from 'redux/store/store';
 
 export default function HomeScreen({
   navigation
 }: NativeStackScreenProps<bottomTabNavigationParamList>) {
- 
+  const { role } = useAppSelector(state => state.authReducer.userProfile.userData!)
+  const isUserAdmin = role === "admin" ? true : false
   return (
     <LinearGradient
       colors={['#FF7A00', '#D92B88']} // Gradient background from orange to magenta
@@ -26,10 +27,14 @@ export default function HomeScreen({
           <View className="w-full items-center">
             <TouchableOpacity
               className="bg-pink-700 py-4 px-10 rounded-full mb-4 w-3/4"
-              onPress={() => navigation.navigate('History')}
+              onPress={() => { 
+                isUserAdmin ? navigation.navigate('Members') : navigation.navigate('History')
+              }}
             >
               <Text className="text-white text-lg font-bold text-center">
-                EXPLORE ACTIVITY
+                { 
+                  isUserAdmin ? "ACTIVATE MEMBERS" : "EXPLORE ACTIVITY"
+                }
               </Text>
             </TouchableOpacity>
 
@@ -38,7 +43,10 @@ export default function HomeScreen({
               onPress={() => navigation.navigate('Group')}
             >
               <Text className="text-white text-lg font-bold text-center">
-                JOIN A GROUP
+                { 
+                  isUserAdmin ? "CREATE A GROUP" :"Join A GROUP"
+                }
+               
               </Text>
             </TouchableOpacity>
           </View>
