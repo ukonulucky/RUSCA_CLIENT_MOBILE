@@ -34,13 +34,11 @@ export const addMemberToGroupApi = async (data: {
   return res.data
 }
 
-
 export const getGroupMembersApi = async (data: {
   jwtToken: string,
   userId: string,
   groupId: string
 }) => {
-
   const res = await axios.get(`${baseUrl}/contribution/group/members/${data.groupId}`, {
     headers: {
       Authorization: `Bearer ${data.jwtToken}`,
@@ -62,6 +60,20 @@ export const getGroupApi = async (data: {
   })
   return res.data
 }
+export const getGroupMembersAndPaymentAmountApi = async (data: {
+  jwtToken: string,
+  userId: string
+}) => {
+  const res = await axios.get(`${baseUrl}/contribution/member/members/all`, {
+    headers: {
+      Authorization: `Bearer ${data.jwtToken}`,
+      "userid":data.userId
+    }
+  })
+  return res.data
+}
+
+
 
 
 

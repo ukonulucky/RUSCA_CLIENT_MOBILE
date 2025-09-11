@@ -1,8 +1,9 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
-import { memberStateType, memberType } from "../../utils/types"
+import { allMembersWithContributionType, memberStateType, memberType } from "../../utils/types"
 
 const initialState: memberStateType = {
-    member : null
+    member: null,
+    membersWithContribution: []
 }
    
 const memberSlice = createSlice({
@@ -11,12 +12,15 @@ const memberSlice = createSlice({
     reducers: {
         saveMemberAction: (state, action: PayloadAction<memberType>) => {
          state.member =  action.payload
+        },
+        saveMembersWithContributionAction: (state, action: PayloadAction<allMembersWithContributionType[] | []>) => {
+         state.membersWithContribution =  action.payload
         }
     }
 })
 
 
-export const {saveMemberAction} =  memberSlice.actions
+export const {saveMemberAction,saveMembersWithContributionAction} =  memberSlice.actions
 
 
 export const memberReducer = memberSlice.reducer

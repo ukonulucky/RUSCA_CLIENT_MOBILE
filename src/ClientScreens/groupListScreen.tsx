@@ -49,7 +49,7 @@ const GroupListScreen = ({
          })
        dispatch(getGroupAction(newData))
        setGroup(newData)
-           console.log("group data", data)
+  
            setLoader(!loader)
           
          } catch (error) {

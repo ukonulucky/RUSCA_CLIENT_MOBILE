@@ -3,7 +3,7 @@ import { Alert, View } from "react-native";
 import { Button } from "react-native-elements";
 import { useStripe } from "@stripe/stripe-react-native";
 
-import { paymentType } from "utils/types";
+import { allMembersWithContributionType, paymentType } from "utils/types";
 import { useAppSelector } from "redux/store/store";
 
 import { makePaymentApi } from "../../apiServices/paymentApi/paymentApi";
@@ -11,11 +11,19 @@ import { AxiosError } from "axios";
 import { toastError } from "utils/useFulFunc";
 import { useFocusEffect } from "@react-navigation/native";
 
-const MakePayMent = ({ email, amount, name, groupId, navigation }: paymentType) => {
+const MakePayMent = ({ email, amount, name, groupId, navigation, status }: paymentType) => {
   const { initPaymentSheet, presentPaymentSheet } = useStripe();
   const [loading, setLoading] = useState(false);
   const [startApiCall, setStartApiCAll] = useState(true);
   
+
+  // check if user has already paid
+ const userPaymentData = useAppSelector(state => state.memberReducer.membersWithContribution)
+
+  const hasUserPeyed = userPaymentData.find((data:allMembersWithContributionType) => { 
+         return data.userId === userId
+  })
+
   // iniciate payment from the server
 
   const InitiatePaymentFromServer = async (data: {
@@ -105,6 +113,7 @@ const MakePayMent = ({ email, amount, name, groupId, navigation }: paymentType) 
     useCallback(() => {
       // This will run each time the screen is focused
       console.log('Screen is focused');
+      if (hasUserPeyed) return // stop payment innitiated since user has already paid
       InitiatePaymentFromClient()
 
     }, []))
@@ -127,7 +136,12 @@ const MakePayMent = ({ email, amount, name, groupId, navigation }: paymentType) 
   return (
     <View>
       <Button
-        title="Make Contribution"
+        disabled={ 
+          status === "pending" ? true : hasUserPeyed ? true : false
+        }
+        title={ 
+         hasUserPeyed ? "Payment Made" : status === "pending" ? "Pending..Awaiting Admin Permision" : "Make Contribution"
+        }
         onPress={() => handlePayment()}
         buttonStyle={{
           backgroundColor: "#3498db",

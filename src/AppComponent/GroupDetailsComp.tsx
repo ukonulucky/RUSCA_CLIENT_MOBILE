@@ -1,7 +1,7 @@
 import React from 'react';
 import {  FlatList, Text, View } from 'react-native';
 
-import { GroupDetailsProps, Member } from 'utils/types';
+import { allMembersWithContributionType, GroupDetailsProps, Member } from 'utils/types';
 import { formatMoney } from 'utils/useFulFunc';
 import MakePayMent from './Payment';
 import { useAppSelector} from 'redux/store/store';
@@ -23,6 +23,19 @@ export function GroupDetails({ group, email, navigation}: GroupDetailsProps) {
   const { name, amount, dateOfContribution, members, id: groupId } = group 
 
 
+  console.log("group list", group)
+  const userId = useAppSelector(state => state.authReducer.userProfile.userData?._id)
+  
+  const filteredUserdata = members.filter(member => member.id === userId)
+  const memberStatus = filteredUserdata[0].status
+
+ // check if user has already paid
+  const userPaymentData = useAppSelector(state => state.memberReducer.membersWithContribution)
+ 
+   const hasUserPeyed = userPaymentData.find((data:allMembersWithContributionType) => { 
+          return data.userId === userId
+   })
+ 
     return (
       <View className="flex-1 bg-sky-100 p-4 ">
         
@@ -33,6 +46,9 @@ export function GroupDetails({ group, email, navigation}: GroupDetailsProps) {
           <Text className="text-2xl font-bold text-blue-900 mb-2">{name}</Text>
           <Text className="text-blue-700 mb-4">Contribution amount: {formatMoney(amount)}</Text>
           <Text className="text-blue-700 mb-4">Contribution Date: {new Date(dateOfContribution).toLocaleDateString()}</Text>
+          { 
+            hasUserPeyed && <Text className="text-blue-700 mb-4">Amount Paid: {hasUserPeyed?.contribution[0].contributionAmount}</Text>
+          }
   
           <View>
             <MakePayMent
@@ -41,6 +57,7 @@ export function GroupDetails({ group, email, navigation}: GroupDetailsProps) {
               name={name}
               groupId={groupId}
               navigation={navigation}
+              status={ memberStatus }
             />
            </View>
         </View>

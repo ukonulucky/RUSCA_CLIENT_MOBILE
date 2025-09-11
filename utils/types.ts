@@ -20,9 +20,8 @@ export type createGroupApiProp = {
   numberOfMembers: string;
   monthlyContribution: string;
   jwtToken: string;
-  userId: string
+  userId: string;
 };
-
 
 export type getAllGroupsType = {
   jwtToken: string;
@@ -53,10 +52,9 @@ export type bottomTabNavigationParamList = {
   Home: { screen: "Home" };
   Group: undefined;
   History: undefined;
-  Profile: undefined,
-  Members: undefined
+  Profile: undefined;
+  Members: undefined;
 };
-
 
 export type authStackParamList = {
   signInScreen: undefined;
@@ -85,7 +83,7 @@ export type groupStackParamList = {
   groupListScreen: undefined;
   groupDetailsScreen: undefined;
   groupPaymentScreen: undefined;
-  paymentSuccessScreen: undefined
+  paymentSuccessScreen: undefined;
 };
 
 export type clientStackParamList = {
@@ -214,7 +212,7 @@ export type Group = {
 
 export type GroupPickerProps = {
   groups?: Group[];
-  navigation: any
+  navigation: any;
 };
 export interface PaymentData {
   email: string;
@@ -231,6 +229,7 @@ export type memberType = {
 
 export type memberStateType = {
   member: memberType;
+  membersWithContribution: allMembersWithContributionType[] | [];
 };
 
 export type GroupDetails = {
@@ -250,32 +249,31 @@ export type Member = {
 
 export type GroupDetailsProps = {
   group: GroupDetails;
-  email: string,
-  navigation: any
+  email: string;
+  navigation: any;
 };
 
 export type groupMemberListType = {
-  id: string,
-  name: string,
-  amount: number,
-  dateOfContribution: number,
+  id: string;
+  name: string;
+  amount: number;
+  dateOfContribution: number;
   members: {
     id: string;
     name: string;
     email: string;
     status: "active" | "pending";
-  }[]
- 
+  }[];
 };
 
-
 export type paymentType = {
-  amount: number,
-  email: string,
-  name: string,
-  groupId: string,
-  navigation: any
-}
+  amount: number;
+  email: string;
+  name: string;
+  groupId: string;
+  navigation: any;
+  status: string;
+};
 
 export interface PaymentHistoryType {
   _id: string;
@@ -287,3 +285,17 @@ export interface PaymentHistoryType {
   paymentRecipt_url?: string;
   createdAt: string;
 }
+
+export interface constributionType {
+  contributionAmount: number;
+  contributionDate: string;
+}
+export type allMembersWithContributionType = {
+  userId: string;
+  groupId: string;
+  contribution: {
+        contributionAmount: string;
+        contributionData: string;
+      }[]
+    | [];
+};

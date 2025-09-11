@@ -22,13 +22,13 @@ export function GroupPicker({
 }: GroupPickerProps) {
 
 
-  const [query, setQuery] = useState("");
+  const [query, setQuery] = useState(""); // query is the text typed in the search bar 
  
   const [loader, setLoader] = useState<boolean>(false);
 
   const dispatch = useDispatch();
   const filtered = useMemo(() => {
-    const q = query.trim().toLowerCase();
+    const q = query.trim().toLowerCase(); 
     if (!q) return groups;
     return groups?.filter((g) => g.name.toLowerCase().includes(q));
   }, [groups, query]);
@@ -63,7 +63,7 @@ export function GroupPicker({
       });
 
       dispatch(getGroupAction(newData));
-      console.log("group data", data);
+    
       setLoader(!loader);
     } catch (error) {
       setLoader(!loader);
