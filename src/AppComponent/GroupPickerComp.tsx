@@ -17,7 +17,7 @@ import { saveMemberAction } from "redux/slices/memberSlice";
 import { useAppDispatch, useAppSelector } from "redux/store/store";
 import { Group, groupStackParamList } from "utils/types";
 
-import { formatMoney, toastError } from "utils/useFulFunc";
+import { currencyFormatter, formatMoney, toastError } from "utils/useFulFunc";
 
 export function GroupPickerHeader() {
   return (
@@ -101,7 +101,6 @@ export function GroupCard({
     (state) => state.authReducer.userProfile.userData?._id!
   );
 
-
   // check if user is subscribed i.e the Id of user is found among the groupList
 
  
@@ -167,8 +166,6 @@ export function GroupCard({
     }
   };
 
- 
-
   return (
     <TouchableOpacity
       onPress={() => {
@@ -198,7 +195,7 @@ export function GroupCard({
         <View className="flex-row items-center justify-between">
           <Text className="text-blue-700/80">Contribution</Text>
           <Text className="text-blue-900 font-bold">
-            {formatMoney(g.amount, currency)}
+            { g.currency}{currencyFormatter(g.amount)}
           </Text>
         </View>
         <View className="flex-row items-center justify-between">
@@ -282,14 +279,17 @@ export function GroupList({
 }
 
 // Empty state
-export function EmptyState() {
+export function EmptyState({heading = "No groups found", description = "Try adjusting your search or check back later." }: {
+  heading?: string,
+  description?: string
+}) {
   return (
     <View className="m-4 flex-1 items-center justify-center rounded-2xl border border-dashed border-sky-300 bg-white p-10">
       <Text className="text-lg font-semibold text-blue-900">
-        No groups found
+        { heading }
       </Text>
       <Text className="text-blue-700/80 mt-1">
-        Try adjusting your search or check back later.
+        { description }
       </Text>
     </View>
   );

@@ -273,6 +273,7 @@ export type paymentType = {
   groupId: string;
   navigation: any;
   status: string;
+  hasUserPeyed: any
 };
 
 export interface PaymentHistoryType {
@@ -289,13 +290,14 @@ export interface PaymentHistoryType {
 export interface constributionType {
   contributionAmount: number;
   contributionDate: string;
+  
 }
 export type allMembersWithContributionType = {
   userId: string;
   groupId: string;
   contribution: {
         contributionAmount: string;
-        contributionData: string;
+        contributionDate: string;
       }[]
     | [];
 };

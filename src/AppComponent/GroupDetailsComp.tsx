@@ -2,7 +2,7 @@ import React from 'react';
 import {  FlatList, Text, View } from 'react-native';
 
 import { allMembersWithContributionType, GroupDetailsProps, Member } from 'utils/types';
-import { formatMoney } from 'utils/useFulFunc';
+import { currencyFormatter, formatMoney } from 'utils/useFulFunc';
 import MakePayMent from './Payment';
 import { useAppSelector} from 'redux/store/store';
 import Header from 'src/authScreens/components/Header';
@@ -31,27 +31,38 @@ export function GroupDetails({ group, email, navigation}: GroupDetailsProps) {
 
  // check if user has already paid
   const userPaymentData = useAppSelector(state => state.memberReducer.membersWithContribution)
- 
-   const hasUserPeyed = userPaymentData.find((data:allMembersWithContributionType) => { 
+  console.log("userPaymentDATA", userPaymentData)
+  console.log("userId", userId)
+  const hasUserPeyed = userPaymentData.find((data: allMembersWithContributionType) => { 
+     console.log("id:", data.userId,"contribution array:", data.contribution)
           return data.userId === userId
    })
- 
+ console.log("hasUserPeyed", hasUserPeyed)
     return (
       <View className="flex-1 bg-sky-100 p-4 ">
-        
         <View className='mt-18'>
         <Header navigation={navigation} />
         </View>
         <View className="bg-white rounded-2xl shadow-sm mb-6 p-4 mt-6">
           <Text className="text-2xl font-bold text-blue-900 mb-2">{name}</Text>
-          <Text className="text-blue-700 mb-4">Contribution amount: {formatMoney(amount)}</Text>
+          <Text className="text-blue-700 mb-4">Contribution amount: {currencyFormatter(Number(amount))}</Text>
           <Text className="text-blue-700 mb-4">Contribution Date: {new Date(dateOfContribution).toLocaleDateString()}</Text>
+         
           { 
-            hasUserPeyed && <Text className="text-blue-700 mb-4">Amount Paid: {hasUserPeyed?.contribution[0].contributionAmount}</Text>
+            hasUserPeyed?.contribution.length !== 0 &&
+            <>
+             <Text className="text-blue-700 mb-4">Payment Date: {
+            new Date(hasUserPeyed?.contribution[0].contributionDate as string).toLocaleDateString()
+            
+              }</Text>
+              <Text className="text-blue-700 mb-4">Amount Paid:
+              {currencyFormatter(Number(hasUserPeyed?.contribution[0].contributionAmount)/ 1000 )}</Text>
+            </>  
           }
   
           <View>
             <MakePayMent
+              hasUserPeyed={hasUserPeyed}
               amount={amount}
               email={email}
               name={name}

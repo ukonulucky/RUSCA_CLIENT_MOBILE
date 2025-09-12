@@ -33,7 +33,7 @@ export default function HomeScreen({
             >
               <Text className="text-white text-lg font-bold text-center">
                 { 
-                  isUserAdmin ? "ACTIVATE MEMBERS" : "EXPLORE ACTIVITY"
+                  isUserAdmin ? "Activate Members" : "Payment History"
                 }
               </Text>
             </TouchableOpacity>
@@ -44,7 +44,7 @@ export default function HomeScreen({
             >
               <Text className="text-white text-lg font-bold text-center">
                 { 
-                  isUserAdmin ? "CREATE A GROUP" :"Join A GROUP"
+                  isUserAdmin ? "Create A Group" :"Join A Group"
                 }
                
               </Text>

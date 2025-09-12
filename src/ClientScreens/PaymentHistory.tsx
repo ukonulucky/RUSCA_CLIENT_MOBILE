@@ -5,6 +5,7 @@ import { View, Text, TextInput, FlatList, Button, TouchableOpacity, Alert, SafeA
 import { WebView } from "react-native-webview"; // Optional if you want to show the receipt in-app
 import { useAppSelector } from "redux/store/store";
 import AppLoaderScreen from "src/AppComponent/AppLoader";
+import { EmptyState } from "src/AppComponent/GroupPickerComp";
 import { PaymentHistoryType } from "utils/types";
 import { toastError } from "utils/useFulFunc";
 
@@ -45,7 +46,8 @@ const PaymentHistory: React.FC = () => {
     jwtToken: string,
     userId: string,
     email: string
-   }) => { 
+  }) => { 
+    
      try {
           setLoader(!loader);
           /* make api call for user signIn */
@@ -92,8 +94,9 @@ const PaymentHistory: React.FC = () => {
   return <AppLoaderScreen />
   }
   return (
-    <SafeAreaView>
-       <View className="p-6">
+    <SafeAreaView className="flex-1 ">
+       
+      <View className="px-2 pt-2">
       <Text className="text-2xl font-bold mb-4">User Payment History</Text>
       {/* Search Bar */}
       <TextInput
@@ -102,40 +105,48 @@ const PaymentHistory: React.FC = () => {
         value={searchTerm}
         onChangeText={setSearchTerm}
       />
-
-      {/* List of Payments */}
+     </View>
+     
+        {/* List of Payments */}
+        { 
+        filteredPayments.length === 0 ? <EmptyState
+          heading="No payment found"
+          description="Try adjsuting your search or try again later"
+        /> :
+            <FlatList
+          data={filteredPayments}
+          keyExtractor={(item) => item._id}
+          contentContainerStyle={{ paddingBottom: 200 }}
+          renderItem={({ item }) => (
+            <View className="mb-4 p-4 border border-gray-300 rounded-lg">
+              <Text className="text-lg font-semibold">
+                {new Date(item.createdAt).toLocaleString()}
+              </Text>
+              <Text>{item.description}</Text>
+              <Text>{item.email}</Text>
+              <Text>
+                {`$${(item.amount / 100).toFixed(2)} ${item.currency.toUpperCase()}`}
+              </Text>
+              <Text className={ item.status === "succeeded" ? "text-green-500" : item.status === "failed" ? "text-red-500" : "text-yellow-500"}>
+                {item.status}
+              </Text>
+              {item.paymentRecipt_url && (
+                <TouchableOpacity
+                  onPress={() => handleViewReceipt(item.paymentRecipt_url)}
+                  className={ "bg-indigo-600 p-2 mt-2 rounded-md"}
+                >
+                  <Text className={ "text-white text-center"}>View Receipt</Text>
+                </TouchableOpacity>
+              )}
+            </View>
+          )}
+        />
+        }
       
-      <FlatList
-        data={filteredPayments}
-        keyExtractor={(item) => item._id}
-        contentContainerStyle={{ paddingBottom: 200 }}
-        renderItem={({ item }) => (
-          <View className="mb-4 p-4 border border-gray-300 rounded-lg">
-            <Text className="text-lg font-semibold">
-              {new Date(item.createdAt).toLocaleString()}
-            </Text>
-            <Text>{item.description}</Text>
-            <Text>{item.email}</Text>
-            <Text>
-              {`$${(item.amount / 100).toFixed(2)} ${item.currency.toUpperCase()}`}
-            </Text>
-            <Text className={ item.status === "succeeded" ? "text-green-500" : item.status === "failed" ? "text-red-500" : "text-yellow-500"}>
-              {item.status}
-            </Text>
-            {item.paymentRecipt_url && (
-              <TouchableOpacity
-                onPress={() => handleViewReceipt(item.paymentRecipt_url)}
-                className={ "bg-indigo-600 p-2 mt-2 rounded-md"}
-              >
-                <Text className={ "text-white text-center"}>View Receipt</Text>
-              </TouchableOpacity>
-            )}
-          </View>
-        )}
-      />
+      
 
       {/* WebView to display the receipt if available */}
-       {showReceipt && (
+     {/*   {showReceipt && (
         <WebView
           source={{ uri: showReceipt }}
           className="flex-1"
@@ -143,9 +154,9 @@ const PaymentHistory: React.FC = () => {
           domStorageEnabled={true} // Enable DOM storage for full HTML page rendering
           onError={handleCloseReceipt}
         />
-      )} 
+      )}  */}
       
-    </View>
+   
    </SafeAreaView>
   );
 };

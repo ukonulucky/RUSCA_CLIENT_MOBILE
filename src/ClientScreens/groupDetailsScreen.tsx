@@ -73,7 +73,7 @@ const GroupDetailsScreen = ({
           groupId: string,
           contribution: {
             contributionAmount: string,
-            contributionData: string,
+            contributionDate: string,
             id: string
           }[] | []
         } = {
@@ -89,8 +89,8 @@ const GroupDetailsScreen = ({
         
         const contributionData = element.contribution.map((state: any) => { 
           return {
-            groupId: state.groupId,
-            userId: state.userId,
+            contributionAmount: state.contributionAmount,
+            contributionDate: state.contributionDate,
             _id: state._id
           }
         })

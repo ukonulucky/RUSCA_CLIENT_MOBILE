@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { View, Text, FlatList, Alert, TouchableOpacity } from 'react-native';
 import {activateMemberByIdApi, deletMemberByIdApi, getAllMembersDetailsApi } from 'apiServices/authApi/authApi';
 import { useAppSelector } from 'redux/store/store';
+import { EmptyState } from 'src/AppComponent/GroupPickerComp';
 
 // Define types for members
 type MemberDetailsType = {
@@ -186,16 +187,25 @@ export default function MembersScreen() {
   };
 
   return (
-    <View className="flex-1 p-4 bg-gray-100">
-      <Text className="text-2xl font-bold mb-4 text-center text-gray-800">Members List</Text>
+    <View className="flex-1  bg-gray-100">
+      <Text className="text-2xl font-bold mb-4 px-4 pt-2 text-center text-gray-800">Members List</Text>
       {loading ? (
         <Text className="text-center text-gray-600">Loading...</Text>
       ) : (
-        <FlatList
-          data={members}
-          renderItem={renderItem}
-          keyExtractor={(item) => item.id}
-        />
+          <>
+            { 
+               members.length === 0 ?
+                <EmptyState
+                  heading='No member found'
+                description=''
+                /> :
+          <FlatList
+            data={members}
+            renderItem={renderItem}
+            keyExtractor={(item) => item.id}
+          />
+            }
+          </>
       )}
     </View>
   );

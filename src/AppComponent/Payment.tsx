@@ -11,18 +11,18 @@ import { AxiosError } from "axios";
 import { toastError } from "utils/useFulFunc";
 import { useFocusEffect } from "@react-navigation/native";
 
-const MakePayMent = ({ email, amount, name, groupId, navigation, status }: paymentType) => {
+const MakePayMent = ({ email, amount, name, groupId, navigation, status, hasUserPeyed
+ }: paymentType) => {
   const { initPaymentSheet, presentPaymentSheet } = useStripe();
   const [loading, setLoading] = useState(false);
   const [startApiCall, setStartApiCAll] = useState(true);
-  
+  console.log("amount paid",email, amount, name )
 
   // check if user has already paid
- const userPaymentData = useAppSelector(state => state.memberReducer.membersWithContribution)
+  
+  
 
-  const hasUserPeyed = userPaymentData.find((data:allMembersWithContributionType) => { 
-         return data.userId === userId
-  })
+
 
   // iniciate payment from the server
 
@@ -107,6 +107,8 @@ const MakePayMent = ({ email, amount, name, groupId, navigation, status }: payme
     }
   };
 
+
+  
   // Initialize Stripe Payment Configuration
 
   useFocusEffect(
@@ -137,10 +139,10 @@ const MakePayMent = ({ email, amount, name, groupId, navigation, status }: payme
     <View>
       <Button
         disabled={ 
-          status === "pending" ? true : hasUserPeyed ? true : false
+          status === "pending" ? true : hasUserPeyed?.length !== 0 ? true : false
         }
         title={ 
-         hasUserPeyed ? "Payment Made" : status === "pending" ? "Pending..Awaiting Admin Permision" : "Make Contribution"
+          hasUserPeyed?.length !== 0  ? "Payment Made" : status === "pending" ? "Pending..Awaiting Admin Permision" : "Make Contribution"
         }
         onPress={() => handlePayment()}
         buttonStyle={{

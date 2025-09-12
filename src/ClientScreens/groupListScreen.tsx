@@ -43,8 +43,8 @@ const GroupListScreen = ({
                  amount: i.monthlyContribution,
                  maxMembers: i.numberOfMembers,
                  currentMembers: i.groupMembersId.length,
-               currency: "£",
-               groupMembersId: i.groupMembersId
+                 currency: "£",
+                 groupMembersId: i.groupMembersId
              }    
          })
        dispatch(getGroupAction(newData))
