@@ -7,7 +7,7 @@ export default function GroupScreen() {
     <View className="flex-1 bg-white">
       {/* Background Image */}
       <ImageBackground
-        source={require('../../assets/images/join-group.png')} 
+        source={require('../../assets/images/join-group.jpeg')} 
         className="flex-1 justify-center items-center"
       >
         <View className="flex-1 justify-center relative items-center px-5  w-full">

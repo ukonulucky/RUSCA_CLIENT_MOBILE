@@ -18,7 +18,7 @@ export default function HomeScreen({
     >
       {/* Background Image */}
       <ImageBackground
-        source={require('../../assets/images/home-background.png')} // Replace with your image
+        source={require('../../assets/images/home-background.jpeg')} // Replace with your image
         className="flex-1 justify-center items-center"
       >
         <View className="flex-1 justify-end items-center px-5">
