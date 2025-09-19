@@ -11,7 +11,7 @@ import { AxiosError } from "axios";
 import { toastError } from "utils/useFulFunc";
 import { useFocusEffect } from "@react-navigation/native";
 
-const MakePayMent = ({ email, amount, name, groupId, navigation, status, hasUserPeyed
+const MakePayMent = ({ email, amount, name, groupId, navigation, status
  }: paymentType) => {
   const { initPaymentSheet, presentPaymentSheet } = useStripe();
   const [loading, setLoading] = useState(false);
@@ -19,9 +19,26 @@ const MakePayMent = ({ email, amount, name, groupId, navigation, status, hasUser
   console.log("amount paid",email, amount, name )
 
   // check if user has already paid
-  
+  const userPaymentData = useAppSelector(state => state.memberReducer.membersWithContribution)
   
 
+  const {
+    _id: userId,
+    fullname,
+    token
+  } = useAppSelector((state) => state.authReducer.userProfile.userData!);
+
+
+  const selectedGroup = useAppSelector(state => state.groupReducer.selectedGroupId)
+  const hasUserPeyed = userPaymentData.filter((data: any) => { 
+    console.log("userId in loop", userId)
+    console.log("id:", data.userId,"contribution array:", data.contribution)
+         return data.userId === userId && data.groupId === selectedGroup
+  }) as any[]
+
+ console.log("userPaymentData",userPaymentData)
+  console.log("hasUserPayed now dfomr payment:", hasUserPeyed)
+ 
 
 
   // iniciate payment from the server
@@ -49,11 +66,7 @@ const MakePayMent = ({ email, amount, name, groupId, navigation, status, hasUser
     return res;
   };
 
-  const {
-    _id: userId,
-    fullname,
-    token,
-  } = useAppSelector((state) => state.authReducer.userProfile.userData!);
+
 
   const InitiatePaymentFromClient = async () => {
     try {
@@ -115,7 +128,8 @@ const MakePayMent = ({ email, amount, name, groupId, navigation, status, hasUser
     useCallback(() => {
       // This will run each time the screen is focused
       console.log('Screen is focused');
-      if (hasUserPeyed) return // stop payment innitiated since user has already paid
+      if(hasUserPeyed[0].contribution?.length !== 0  || hasUserPeyed[0].status === "pending") return
+
       InitiatePaymentFromClient()
 
     }, []))
@@ -139,10 +153,10 @@ const MakePayMent = ({ email, amount, name, groupId, navigation, status, hasUser
     <View>
       <Button
         disabled={ 
-          status === "pending" ? true : hasUserPeyed?.length !== 0 ? true : false
+          hasUserPeyed[0]?.status === "pending" ? true : hasUserPeyed[0].contribution?.length !== 0 ? true : false
         }
         title={ 
-          hasUserPeyed?.length !== 0  ? "Payment Made" : status === "pending" ? "Pending..Awaiting Admin Permision" : "Make Contribution"
+          hasUserPeyed[0].contribution?.length !== 0  ? "Payment Made" : hasUserPeyed[0]?.status === "pending" ? "Pending..Awaiting Admin Permision" : "Make Contribution"
         }
         onPress={() => handlePayment()}
         buttonStyle={{

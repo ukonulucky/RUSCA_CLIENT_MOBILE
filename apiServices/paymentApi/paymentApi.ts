@@ -1,5 +1,7 @@
 import axios from 'axios'
-
+//const baseUrl = 'http://192.168.0.48:9000/v1'
+// 10.0.2.2:9000 = connecting to emulator
+// 192.168.0.48 = connecting to physical phone
 const baseUrl = 'http://10.0.2.2:9000/v1/payment'
 
 /* payment api api */

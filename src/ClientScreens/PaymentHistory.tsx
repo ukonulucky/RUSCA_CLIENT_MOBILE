@@ -125,19 +125,19 @@ const PaymentHistory: React.FC = () => {
               <Text>{item.description}</Text>
               <Text>{item.email}</Text>
               <Text>
-                {`$${(item.amount / 100).toFixed(2)} ${item.currency.toUpperCase()}`}
+                {`£${(item.amount / 100).toFixed(2)} `}
               </Text>
               <Text className={ item.status === "succeeded" ? "text-green-500" : item.status === "failed" ? "text-red-500" : "text-yellow-500"}>
                 {item.status}
               </Text>
-              {item.paymentRecipt_url && (
+            {/*   {item.paymentRecipt_url && (
                 <TouchableOpacity
                   onPress={() => handleViewReceipt(item.paymentRecipt_url)}
                   className={ "bg-indigo-600 p-2 mt-2 rounded-md"}
                 >
                   <Text className={ "text-white text-center"}>View Receipt</Text>
                 </TouchableOpacity>
-              )}
+              )} */}
             </View>
           )}
         />
@@ -146,7 +146,7 @@ const PaymentHistory: React.FC = () => {
       
 
       {/* WebView to display the receipt if available */}
-     {/*   {showReceipt && (
+       {showReceipt && (
         <WebView
           source={{ uri: showReceipt }}
           className="flex-1"
@@ -154,7 +154,7 @@ const PaymentHistory: React.FC = () => {
           domStorageEnabled={true} // Enable DOM storage for full HTML page rendering
           onError={handleCloseReceipt}
         />
-      )}  */}
+      )}  
       
    
    </SafeAreaView>

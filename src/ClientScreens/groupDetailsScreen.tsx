@@ -71,6 +71,7 @@ const GroupDetailsScreen = ({
         const list: {
           userId: string,
           groupId: string,
+          status:string,
           contribution: {
             contributionAmount: string,
             contributionDate: string,
@@ -79,12 +80,14 @@ const GroupDetailsScreen = ({
         } = {
           userId: "",
           groupId: "",
-          contribution: []  
+          contribution: [],
+          status: ""
         }
         const element = filterMembersWithPaymentArray[index]
          
         list.groupId = element.groupId
         list.userId = element.userId
+        list.status = element.status
         console.log(`element ${index}`, element)
         
         const contributionData = element.contribution.map((state: any) => { 
@@ -96,12 +99,8 @@ const GroupDetailsScreen = ({
         })
         list.contribution = contributionData
         contributionArray.push(list)
-       console.log("list data",list)
      }
 
-      
-      console.log("filterMembersWithPayment", contributionArray)
-      
       dispatch(saveMembersWithContributionAction(contributionArray));
 
       const {

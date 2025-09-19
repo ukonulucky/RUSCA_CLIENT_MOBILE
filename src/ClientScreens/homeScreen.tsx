@@ -9,14 +9,14 @@ import { useAppSelector } from 'redux/store/store';
 export default function HomeScreen({
   navigation
 }: NativeStackScreenProps<bottomTabNavigationParamList>) {
-  const { role } = useAppSelector(state => state.authReducer.userProfile.userData!)
+  const role = useAppSelector(state => state.authReducer.userProfile.userData?.role)
   const isUserAdmin = role === "admin" ? true : false
   return (
     <LinearGradient
       colors={['#FF7A00', '#D92B88']} // Gradient background from orange to magenta
       className="flex-1"
     >
-      {/* Background Image */}
+      {/* Bacakground Image */}
       <ImageBackground
         source={require('../../assets/images/home-background.jpeg')} // Replace with your image
         className="flex-1 justify-center items-center"

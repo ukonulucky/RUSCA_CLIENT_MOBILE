@@ -1,7 +1,8 @@
 import axios from 'axios'
 import { apiLoginType,  createGroupApiProp,   signUpFormStateProp } from '../../utils/types'
-
-const baseUrl = 'http://10.0.2.2:9000/v1'
+// 192.168.0.48  conencting to physical phone
+//192.168.0.48
+const baseUrl = 'http://192.168.0.48:9000/v1'
 
 /* register api */
 export const registerApi = async (data: signUpFormStateProp) => {

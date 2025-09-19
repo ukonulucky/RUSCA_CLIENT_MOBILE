@@ -95,7 +95,9 @@ const UserProfileScreen = () => {
      
       <TouchableOpacity
         onPress={handleLogout}
-      className="mt-8 w-full rounded-xl px-4 py-3 items-center justify-center bg-blue-700  text-white text-lg text-bold">
+        className="mt-8 w-full rounded-xl px-4 py-3 items-center justify-center bg-blue-950  text-white text-lg text-bold"
+      
+      >
         <Text className='text-white text-14'>
           Logout
        </Text>

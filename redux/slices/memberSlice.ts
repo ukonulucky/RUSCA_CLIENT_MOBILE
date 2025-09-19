@@ -15,7 +15,6 @@ const memberSlice = createSlice({
         },
         saveMembersWithContributionAction: (state, action: PayloadAction<allMembersWithContributionType[] | []>) => {
             state.membersWithContribution = action.payload
-            console.log("action sent", action.payload)
         }
     }
 })

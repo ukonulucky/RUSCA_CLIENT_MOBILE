@@ -1,6 +1,7 @@
 import axios from 'axios'
 
-const baseUrl = 'http://10.0.2.2:9000/v1'
+const baseUrlq = 'http://10.0.2.2:9000/v1'
+const baseUrl = 'http://192.168.0.48:9000/v1'
 
 /* getAllGroups api */
 

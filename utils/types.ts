@@ -295,6 +295,7 @@ export interface constributionType {
 export type allMembersWithContributionType = {
   userId: string;
   groupId: string;
+  status: string;
   contribution: {
         contributionAmount: string;
         contributionDate: string;

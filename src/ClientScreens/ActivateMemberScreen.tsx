@@ -79,6 +79,7 @@ export default function MembersScreen() {
       setSelectedMemberId("")
       setSelectedMemberDeleteId("")
       setLoading(!loading)
+      setRefetch(!refetch)
       Alert.alert('Success', 'Member activated successfully');
     } catch (error: any) {
       console.error('Error activating user:', error.response.data.message);
